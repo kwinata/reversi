@@ -1,7 +1,7 @@
 # Reversi
 AI to play reversi implemented with alpha-beta pruning principle
 
-This work is idea comes from https://courses.csail.mit.edu/6.034f/ai3/ch6.pdf.
+The idea of this project comes from https://courses.csail.mit.edu/6.034f/ai3/ch6.pdf.
 
 ## Note
 The code is not written by myself. The original code is from http://inventwithpython.com/chapter15.html. But the algorithm implemented was only greedy and always-take-corner. Some insight about the strategy was taken from http://www.samsoft.org.uk/reversi/strategy.htm.
