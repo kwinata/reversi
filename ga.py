@@ -4,8 +4,9 @@ import random
 import sys
 from reversi import *
 
-#alphabeta depth
-depth = 2
+# input
+depth = 1
+numberofmatch = 15
 
 # create a table of score for each move in corresponding location
 scoretable=[]
@@ -109,52 +110,39 @@ def match():
     resetBoard(mainBoard)
     playerTile, computerTile = ['X','O']
     showHints = False
-    turn = whoGoesFirst()
-    print('The ' + turn + ' will go first.')
-    
+    turn = whoGoesFirst() 
     while True:
         if turn == 'player':
             if getValidMoves(mainBoard, playerTile) == []:
-                print("Comp1 no valid moves\n")
+                pass
             else:
-                showPoints(playerTile, playerTile, mainBoard)
                 x, y = getComputerMove(mainBoard, playerTile, scoretable)
                 makeMove(mainBoard, playerTile, x, y)
-                print("Comp1",x,y) 
             turn = 'computer'
 
         else:
             if getValidMoves(mainBoard, computerTile) == []:
                 if getValidMoves(mainBoard, playerTile) == []:
-                    print("Game ends: No move possible")
                     break
-                print("No valid move\n")
             else:
-                showPoints(playerTile, computerTile, mainBoard)
                 x, y = getComputerMove(mainBoard, computerTile, scoretable)
-                makeMove(mainBoard, computerTile, x, y)
-                print("Comp2",x,y)
+                makeMove(mainBoard, computerTile, x, y) 
             turn = 'player'
-
-    # Display the final score.
-    drawBoard(mainBoard)
+     
     scores = getPointBoard(mainBoard)
-    print('Comp1 scored %s points. Comp2 scored %s points.' % (scores['X'], scores['O']))
     
     # Calculate Fitness
     if(scores['X']>scores['O']):
-        return 1
+        fit = 1
     elif(scores['X']<scores['O']):
-        return 0
+        fit = -1
     else:
-        return -1
+        fit = 0
+
+    print('%2s %2s %2s' % (scores['X'], scores['O'], fit))
+    return fit
 
 fitness = 0
-results = []
-for i in range(5):
-    tmp = match()
-    results.append(tmp)
-    fitness += tmp
-
+for i in range(numberofmatch):
+    fitness += match()
 print("Fitness =", fitness)
-print(results)
