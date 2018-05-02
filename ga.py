@@ -24,11 +24,14 @@ scoretable1.append([-8, -24, -4, -3, -3, -4, -24, -8])
 scoretable1.append([99, -8, 8, 6, 6, 8, -8, 99])
 
 scoretable2=[]
+scoretables1=[scoretable1]
+scoretables2=[scoretable2]
+
 for i in range(8):
     scoretable2.append([0,0,0,0,0,0,0,0])
 
 
-def getComputerMove(board, computerTile, scoretable):
+def getComputerMove(board, computerTile, scoretables):
     # Given a board and the computer's tile, determine where to
     # move and return that move as a [x, y] list.
 
@@ -55,10 +58,8 @@ def getComputerMove(board, computerTile, scoretable):
         bestMove=None
 
     for x, y in possibleMoves:
-
         #print("considering ", x+1, y+1) # ux
-        score = alphabeta(board, depth, -1e9, 1e9, computerTile, computerTile, scoretable) # get the state of the best minimax board
-        score += scoretable[x][y] # add with the cost of the move
+        score = alphabeta(board, depth, -1e9, 1e9, computerTile, computerTile, scoretables) # get the state of the best minimax board
 
         if score > bestScore:
             bestMove = [x, y]
@@ -66,7 +67,7 @@ def getComputerMove(board, computerTile, scoretable):
 
     return bestMove
 
-def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretable):
+def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretables):
     # implementation of alphabeta pruning
 
     possibleMoves = getValidMoves(board, tile)
@@ -88,6 +89,11 @@ def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretable):
             # get the alphabeta of child
             child = getBoardCopy(board)
             makeMove(child, tile, x, y)
+            
+            # check which scoretable from scortables should be use
+            # using stage analysis
+            scoretable = scoretables[stagecheck(board)]
+            
             v = alphabeta(child, depth-1, alpha, beta, computerTile, oppTile, scoretable)
             v += scoretable[x][y]
 
@@ -104,6 +110,11 @@ def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretable):
             # get the alphabeta of child
             child = getBoardCopy(board)
             makeMove(child, tile, x, y)
+            
+            # check which scoretable from scortables should be use
+            # using stage analysis
+            scoretable = scoretables[stagecheck(board)]
+
             v = alphabeta(child, depth-1, alpha, beta, computerTile, oppTile, scoretable)
             v -= scoretable[x][y]
 
@@ -112,6 +123,12 @@ def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretable):
             if beta<=alpha:
                 break
         return v
+
+def stagecheck(board):
+    '''
+    === TO DO ==
+    '''
+    return 0
 
 def match(i, j, results, progresses):
     # Reset the board and game.
@@ -126,7 +143,7 @@ def match(i, j, results, progresses):
             if getValidMoves(mainBoard, playerTile) == []:
                 pass
             else:
-                x, y = getComputerMove(mainBoard, playerTile, scoretable1)
+                x, y = getComputerMove(mainBoard, playerTile, scoretables1)
                 makeMove(mainBoard, playerTile, x, y)
             turn = 'computer'
 
@@ -135,7 +152,7 @@ def match(i, j, results, progresses):
                 if getValidMoves(mainBoard, playerTile) == []:
                     break
             else:
-                x, y = getComputerMove(mainBoard, computerTile, scoretable2)
+                x, y = getComputerMove(mainBoard, computerTile, scoretables2)
                 makeMove(mainBoard, computerTile, x, y) 
             turn = 'player'
         numturn+=1
