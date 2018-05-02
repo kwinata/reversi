@@ -5,8 +5,11 @@ import random
 import sys
 from reversi import *
 
+import time
+start_time = time.time()
+
 # input
-depth = 2
+depth = 1
 numberofmatch = 5
 
 # create a table of score for each move in corresponding location
@@ -180,5 +183,6 @@ fitness = (tmp+numberofmatch)/(2*numberofmatch)
 
 print('Progress        : 100 %',
       '\nDepth           :',depth,
-      '\nNumber of Match :', numberofmatch,
-      '\nFitness         :', fitness)
+      '\nNumber of match :', numberofmatch,
+      '\nFitness         :', fitness,
+      '\nTime spent      : %s s' % int(time.time() - start_time))
