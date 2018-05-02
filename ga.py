@@ -1,12 +1,13 @@
 # Reversi
 
+import threading
 import random
 import sys
 from reversi import *
 
 # input
 depth = 2
-numberofmatch = 7
+numberofmatch = 5
 
 # create a table of score for each move in corresponding location
 scoretable1=[]
@@ -109,7 +110,7 @@ def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretable):
                 break
         return v
 
-def match(i, j):
+def match(i, j, results, progresses):
     # Reset the board and game.
     mainBoard = getNewBoard()
     resetBoard(mainBoard)
@@ -134,24 +135,50 @@ def match(i, j):
                 x, y = getComputerMove(mainBoard, computerTile, scoretable2)
                 makeMove(mainBoard, computerTile, x, y) 
             turn = 'player'
-            print("match", i, "out of", j, ":", int(numturn*5/3), "%", end="\r") #showprogress
         numturn+=1
-    scores = getPointBoard(mainBoard)
-    
-    print("                         ", end="\r") #flush
+        
+        # For threading progress tracker
+        progresses[i]=numturn*5/3
+        tmp=0
+        for j in range(numberofmatch):
+            tmp+=progresses[j]
+        tmp/=numberofmatch
+        print('progress: %2s' % int(tmp),'%', end="\r")
     
     # Calculate Fitness
+    scores = getPointBoard(mainBoard) 
     if(scores['X']>scores['O']):
         fit = 1
     elif(scores['X']<scores['O']):
         fit = -1
     else:
         fit = 0
+    results[i]=fit
 
-    print("match", i, "out of", j, ":", '%2s %2s %2s' % (scores['X'], scores['O'], fit))
-    return fit
+    #print("match", i, "out of", j, ":", '%2s %2s %2s' % (scores['X'], scores['O'], fit))
+    
+    return
 
-fitness = 0
+threads = []
+results= [0]*numberofmatch
+progresses = [0]*numberofmatch
+
 for i in range(numberofmatch):
-    fitness += match(i, numberofmatch)
-print("Fitness =", fitness)
+    t = threading.Thread(target=match, args=(i, numberofmatch, results, progresses))
+    threads.append(t)
+    t.start()
+
+# wait until all threads complete
+for t in threads:
+    t.join()
+
+tmp=0
+for i in range(numberofmatch):
+    tmp += results[i]
+fitness = (tmp+numberofmatch)/(2*numberofmatch)
+
+
+print('Progress        : 100 %',
+      '\nDepth           :',depth,
+      '\nNumber of Match :', numberofmatch,
+      '\nFitness         :', fitness)
