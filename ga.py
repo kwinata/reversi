@@ -5,19 +5,24 @@ import sys
 from reversi import *
 
 # input
-depth = 1
-numberofmatch = 15
+depth = 2
+numberofmatch = 7
 
 # create a table of score for each move in corresponding location
-scoretable=[]
-scoretable.append([99, -8, 8, 6, 6, 8, -8, 99])
-scoretable.append([-8, -24, -4, -3, -3, -4, -24, -8])
-scoretable.append([8, -4, 7, 4, 4, 7, -4, 8])
-scoretable.append([6, -3, 4, 0, 0, 4, -3, 6])
-scoretable.append([6, -3, 4, 0, 0, 4, -3, 6])
-scoretable.append([8, -4, 7, 4, 4, 7, -4, 8])
-scoretable.append([-8, -24, -4, -3, -3, -4, -24, -8])
-scoretable.append([99, -8, 8, 6, 6, 8, -8, 99])
+scoretable1=[]
+scoretable1.append([99, -8, 8, 6, 6, 8, -8, 99])
+scoretable1.append([-8, -24, -4, -3, -3, -4, -24, -8])
+scoretable1.append([8, -4, 7, 4, 4, 7, -4, 8])
+scoretable1.append([6, -3, 4, 0, 0, 4, -3, 6])
+scoretable1.append([6, -3, 4, 0, 0, 4, -3, 6])
+scoretable1.append([8, -4, 7, 4, 4, 7, -4, 8])
+scoretable1.append([-8, -24, -4, -3, -3, -4, -24, -8])
+scoretable1.append([99, -8, 8, 6, 6, 8, -8, 99])
+
+scoretable2=[]
+for i in range(8):
+    scoretable2.append([0,0,0,0,0,0,0,0])
+
 
 def getComputerMove(board, computerTile, scoretable):
     # Given a board and the computer's tile, determine where to
@@ -104,19 +109,20 @@ def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretable):
                 break
         return v
 
-def match():
+def match(i, j):
     # Reset the board and game.
     mainBoard = getNewBoard()
     resetBoard(mainBoard)
     playerTile, computerTile = ['X','O']
     showHints = False
     turn = whoGoesFirst() 
+    numturn=1
     while True:
         if turn == 'player':
             if getValidMoves(mainBoard, playerTile) == []:
                 pass
             else:
-                x, y = getComputerMove(mainBoard, playerTile, scoretable)
+                x, y = getComputerMove(mainBoard, playerTile, scoretable1)
                 makeMove(mainBoard, playerTile, x, y)
             turn = 'computer'
 
@@ -125,11 +131,14 @@ def match():
                 if getValidMoves(mainBoard, playerTile) == []:
                     break
             else:
-                x, y = getComputerMove(mainBoard, computerTile, scoretable)
+                x, y = getComputerMove(mainBoard, computerTile, scoretable2)
                 makeMove(mainBoard, computerTile, x, y) 
             turn = 'player'
-     
+            print("match", i, "out of", j, ":", int(numturn*5/3), "%", end="\r") #showprogress
+        numturn+=1
     scores = getPointBoard(mainBoard)
+    
+    print("                         ", end="\r") #flush
     
     # Calculate Fitness
     if(scores['X']>scores['O']):
@@ -139,10 +148,10 @@ def match():
     else:
         fit = 0
 
-    print('%2s %2s %2s' % (scores['X'], scores['O'], fit))
+    print("match", i, "out of", j, ":", '%2s %2s %2s' % (scores['X'], scores['O'], fit))
     return fit
 
 fitness = 0
 for i in range(numberofmatch):
-    fitness += match()
+    fitness += match(i, numberofmatch)
 print("Fitness =", fitness)
