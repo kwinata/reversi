@@ -316,13 +316,13 @@ def alphabeta(board, depth, alpha, beta ,computerTile, tile):
                 break
         return v
 
-def showPoints(playerTile, computerTile):
+def showPoints(playerTile, computerTile, board):
     # Prints out the current score.
-    scores = getPointBoard(mainBoard)
+    scores = getPointBoard(board)
     print('You have %s points. The computer has %s points.' % (scores[playerTile], scores[computerTile]))
 
 
-
+'''
 print('Welcome to Reversi!')
 
 while True:
@@ -386,3 +386,4 @@ while True:
 
     if not playAgain():
         break
+'''
