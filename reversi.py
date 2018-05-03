@@ -5,7 +5,7 @@ import sys
 
 # Copy from match.py
 # input
-depth = 2
+depth = 4
 
 def getComputerMove(board, computerTile, scoretables):
     # Given a board and the computer's tile, determine where to
@@ -460,4 +460,4 @@ def play():
         if not playAgain():
             break
 
-play()
+#play()
