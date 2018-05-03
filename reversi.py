@@ -112,28 +112,18 @@ def getValidMoves(board, tile):
                 validMoves.append([x, y])
     return validMoves
 
-# create a table of score for each move in corresponding location
-scoretable=[]
-scoretable.append([99, -8, 8, 6, 6, 8, -8, 99])
-scoretable.append([-8, -24, -4, -3, -3, -4, -24, -8])
-scoretable.append([8, -4, 7, 4, 4, 7, -4, 8])
-scoretable.append([6, -3, 4, 0, 0, 4, -3, 6])
-scoretable.append([6, -3, 4, 0, 0, 4, -3, 6])
-scoretable.append([8, -4, 7, 4, 4, 7, -4, 8])
-scoretable.append([-8, -24, -4, -3, -3, -4, -24, -8])
-scoretable.append([99, -8, 8, 6, 6, 8, -8, 99])
-
-def getScoreOfBoard(board):
+def getScoreOfBoard(board,scoretable):
     # Determine the score by counting the tiles. Returns a dictionary with keys 'X' and 'O'.
-    global scoretable
     xscore = 0
     oscore = 0
     for x in range(8):
         for y in range(8):
             if board[x][y] == 'X':
-                xscore += 3
+                xscore += scoretable[x][y]
+                oscore -= scoretable[x][y]
             if board[x][y] == 'O':
-                oscore += 3
+                oscore += scoretable[x][y]
+                xscore += scoretable[x][y]
     return {'X':xscore, 'O':oscore}
 
 def getPointBoard(board):
