@@ -9,27 +9,17 @@ import time
 start_time = time.time()
 
 # input
-depth = 1
+depth = 2
 numberofmatch = 5
 
-# create a table of score for each move in corresponding location
-scoretable1=[]
-scoretable1.append([99, -8, 8, 6, 6, 8, -8, 99])
-scoretable1.append([-8, -24, -4, -3, -3, -4, -24, -8])
-scoretable1.append([8, -4, 7, 4, 4, 7, -4, 8])
-scoretable1.append([6, -3, 4, 0, 0, 4, -3, 6])
-scoretable1.append([6, -3, 4, 0, 0, 4, -3, 6])
-scoretable1.append([8, -4, 7, 4, 4, 7, -4, 8])
-scoretable1.append([-8, -24, -4, -3, -3, -4, -24, -8])
-scoretable1.append([99, -8, 8, 6, 6, 8, -8, 99])
-
-scoretable2=[]
-scoretables1=[scoretable1]
-scoretables2=[scoretable2]
-
-for i in range(8):
-    scoretable2.append([0,0,0,0,0,0,0,0])
-
+def generateRandomScoreTable():
+    scoretable=[]
+    for i in range(8):
+        tmp = []
+        for j in range(8):
+            tmp.append(random.randint(0,63))
+        scoretable.append(tmp)
+    return scoretable
 
 def getComputerMove(board, computerTile, scoretables):
     # Given a board and the computer's tile, determine where to
@@ -94,7 +84,7 @@ def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretables):
             # using stage analysis
             scoretable = scoretables[stagecheck(board)]
             
-            v = alphabeta(child, depth-1, alpha, beta, computerTile, oppTile, scoretable)
+            v = alphabeta(child, depth-1, alpha, beta, computerTile, oppTile, scoretables)
             v += scoretable[x][y]
 
             alpha = max(alpha, v)
@@ -115,7 +105,7 @@ def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretables):
             # using stage analysis
             scoretable = scoretables[stagecheck(board)]
 
-            v = alphabeta(child, depth-1, alpha, beta, computerTile, oppTile, scoretable)
+            v = alphabeta(child, depth-1, alpha, beta, computerTile, oppTile, scoretables)
             v -= scoretable[x][y]
 
             beta = min(beta, v)
@@ -125,12 +115,21 @@ def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretables):
         return v
 
 def stagecheck(board):
-    '''
-    === TO DO ==
-    '''
-    return 0
+    flag=0
+    for i in range(8):
+        if board[i][0]!=' ': flag=1
+        if board[i][1]!=' ': flag=1
+        if board[i][6]!=' ': flag=1
+        if board[i][7]!=' ': flag=1
+    for i in range(0,2):
+        for j in range(8):
+            if board[i][j]!=' ': flag=1
+    for i in range(6,8):
+        for j in range(8):
+            if board[i][j]!=' ': flag=1
+    return flag
 
-def match(i, j, results, progresses):
+def match(i, j, results, progresses, scoretables1, scoretables2):
     # Reset the board and game.
     mainBoard = getNewBoard()
     resetBoard(mainBoard)
@@ -179,27 +178,30 @@ def match(i, j, results, progresses):
     
     return
 
-threads = []
-results= [0]*numberofmatch
-progresses = [0]*numberofmatch
 
-for i in range(numberofmatch):
-    t = threading.Thread(target=match, args=(i, numberofmatch, results, progresses))
-    threads.append(t)
-    t.start()
+def versus(numberofmatch):
+    threads = []
+    results= [0]*numberofmatch
+    progresses = [0]*numberofmatch
 
-# wait until all threads complete
-for t in threads:
-    t.join()
+    for i in range(numberofmatch):
+        t = threading.Thread(target=match,
+                             args=(i, numberofmatch,results, progresses, scoretables1, scoretables2))
+        threads.append(t)
+        t.start()
 
-tmp=0
-for i in range(numberofmatch):
-    tmp += results[i]
-fitness = (tmp+numberofmatch)/(2*numberofmatch)
+    # wait until all threads complete
+    for t in threads:
+        t.join()
 
-
-print('Progress        : 100 %',
-      '\nDepth           :',depth,
-      '\nNumber of match :', numberofmatch,
-      '\nFitness         :', fitness,
-      '\nTime spent      : %s s' % int(time.time() - start_time))
+    tmp=0
+    for i in range(numberofmatch):
+        tmp += results[i]
+    fitness = (tmp+numberofmatch)/(2*numberofmatch)
+    
+    print('Progress        : 100 %',
+        '\nNumber of match :', numberofmatch,
+        '\nFitness         :', fitness,
+        '\nTime spent      : %s s' % int(time.time() - start_time))
+    
+    return fitness
