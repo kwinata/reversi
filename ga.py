@@ -1,11 +1,10 @@
 from match import *
 
 numberofmatch = 1
-numberofgeneration = 5
-numberofpopulation = 4
+numberofgeneration = 7
+numberofpopulation = 6
 numberofancestor = 2
 numberofstages = 5
-r = 1
 
 def tablesFromGen(gen):
     scoretables=[]
@@ -48,7 +47,6 @@ def generateFitness(creatures):
         creatures[i]['fitness']
 
 def simulateGeneration(creatures):
-    global r
     for i in range(numberofgeneration):
         print('\n\n== Generation', i+1)
 
@@ -110,5 +108,6 @@ with open('eggs.csv', 'w', newline='\n') as csvfile:
     spamwriter = csv.writer(csvfile, delimiter=',',
             quotechar='|', quoting=csv.QUOTE_MINIMAL)
     for table in (bestCreature['tables']):
+        spamwriter.writerow(['== table =='])
         for row in table:
             spamwriter.writerow(row)

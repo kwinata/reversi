@@ -9,7 +9,7 @@ import time
 start_time = time.time()
 
 # input
-depth = 1
+depth = 2
 
 def getComputerMove(board, computerTile, scoretables):
     # Given a board and the computer's tile, determine where to
