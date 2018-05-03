@@ -1,10 +1,10 @@
 from match import *
 
 numberofmatch = 1
-numberofgeneration = 8
-numberofpopulation = 7
-numberofancestor = 3
-numberofstages = 2
+numberofgeneration = 5
+numberofpopulation = 4
+numberofancestor = 2
+numberofstages = 5
 r = 1
 
 def tablesFromGen(gen):
@@ -66,16 +66,6 @@ def simulateGeneration(creatures):
             creatures[i]['gen']=crossover(creatures[j]['gen'], creatures[k]['gen'])
             creatures[i]['gen']=mutation(creatures[i]['gen'])
         
-        for j in range(8):
-            for k in range(8):
-                print(creatures[0]['tables'][0][j][k],end=",")
-            print()
-        print()
-        for j in range(8):
-            for k in range(8):
-                print(creatures[0]['tables'][1][j][k],end=",")
-            print()
-    
     return creatures[0]
 
 def insertionSort(creatures):
@@ -106,10 +96,19 @@ def crossover(gen1, gen2):
         newgen.append(tmp)
     return newgen
 
-
 creatures = initializeCreatures(numberofpopulation)
 bestCreature = simulateGeneration(creatures)
-newCreatures = initializeCreatures(numberofpopulation)
+newCreatures = initializeCreatures(2*numberofpopulation)
+print("\n===Testing===\n")
+fitness=0
 for i in range(len(newCreatures)):
-    fitness += versus(5, bestCreature['tables'],tablesFromGen(newCreatures[i]['gen']))
+    tmp = versus(5, bestCreature['tables'],tablesFromGen(newCreatures[i]['gen']))
+    fitness+=tmp
 print(fitness/i)
+import csv
+with open('eggs.csv', 'w', newline='\n') as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=',',
+            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    for table in (bestCreature['tables']):
+        for row in table:
+            spamwriter.writerow(row)

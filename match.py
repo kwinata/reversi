@@ -116,6 +116,22 @@ def stagecheck(board):
     for i in range(6,8):
         for j in range(8):
             if board[i][j]!=' ': flag=1
+    if flag == 0:
+        if board[2][2]!=' ': flag=2
+        if board[2][5]!=' ': flag=2
+        if board[5][5]!=' ': flag=2
+        if board[5][2]!=' ': flag=2
+    elif flag == 1:
+        if board[1][1]!=' ': flag=3
+        if board[1][6]!=' ': flag=3
+        if board[6][6]!=' ': flag=3
+        if board[6][1]!=' ': flag=3
+    for i in range(0,8):
+        if board[0][i]!=' ': flag=4
+        if board[i][0]!=' ': flag=4
+        if board[7][i]!=' ': flag=4
+        if board[i][7]!=' ': flag=4
+
     return flag
 
 def match(i, numberofmatch, results, progresses, scoretables1, scoretables2):
