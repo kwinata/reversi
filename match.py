@@ -11,23 +11,6 @@ start_time = time.time()
 # input
 depth = 1
 
-def tablesFromGen(gen):
-    scoretables=[]
-    for i in range(len(gen)):
-        tmp = gen[i]
-        scoretable = []
-        scoretable.append(tmp[0:4]+tmp[3::-1])
-        scoretable.append(tmp[4:8]+tmp[7:3:-1])
-        scoretable.append(tmp[8:12]+tmp[11:7:-1])
-        scoretable.append(tmp[12:16]+tmp[15:11:-1])
-        scoretable.append(tmp[12:16]+tmp[15:11:-1])
-        scoretable.append(tmp[8:12]+tmp[11:7:-1])
-        scoretable.append(tmp[4:8]+tmp[7:3:-1])
-        scoretable.append(tmp[0:4]+tmp[3::-1])
-        scoretables.append(scoretable)
-    return scoretables
-
-
 def getComputerMove(board, computerTile, scoretables):
     # Given a board and the computer's tile, determine where to
     # move and return that move as a [x, y] list.
