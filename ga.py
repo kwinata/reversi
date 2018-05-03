@@ -1,11 +1,11 @@
 from match import *
 
-numberofmatch = 3
-numberofgeneration = 5
-numberofpopulation = 3
-numberofancestor = 2
+numberofmatch = 1
+numberofgeneration = 8
+numberofpopulation = 7
+numberofancestor = 3
 numberofstages = 2
-r = 1 #step in generation
+r = 1
 
 def initializeCreatures(numberofpopulation):
     creatures=[]
@@ -28,22 +28,27 @@ def generateFitness(creatures):
             creatures[i]['fitness']+=matchResult
             creatures[j]['fitness']+=(1-matchResult)
     for i in range(0,l):
-        creatures[i]['fitness'] /= (l-1)
+        creatures[i]['fitness']
 
 def simulateGeneration(creatures):
+    global r
     for i in range(numberofgeneration):
-        print('== Generation', i)
+        print('\n\n== Generation', i+1)
+
+        r = numberofgeneration - i - 1
         for j in range(numberofpopulation):
             creatures[j]['fitness']=0
             creatures[j]['tables']=tablesFromGen(creatures[j]['gen'])
+        
         generateFitness(creatures)
         insertionSort(creatures)
+        
         for i in range(numberofancestor, numberofpopulation):
             j = random.randint(0,numberofancestor-1)
             k = random.randint(0,numberofancestor-1)
             creatures[i]['gen']=crossover(creatures[j]['gen'], creatures[k]['gen'])
             creatures[i]['gen']=mutation(creatures[i]['gen'])
-         
+        
         for j in range(8):
             for k in range(8):
                 print(creatures[0]['tables'][0][j][k],end=",")
@@ -53,6 +58,7 @@ def simulateGeneration(creatures):
             for k in range(8):
                 print(creatures[0]['tables'][1][j][k],end=",")
             print()
+    
     return creatures[0]
 
 def insertionSort(creatures):
@@ -67,28 +73,26 @@ def insertionSort(creatures):
 
 def mutation(gen):
     newgen = gen
-    for i in range(r*len(newgen)):
-        for l in range(r*random.randint(0,15)):
-            j = random.randint(0,15)
-            k = random.randint(0,15)
-            newgen[i][j],newgen[i][k]=newgen[i][k],newgen[i][j]
+    for i in range(len(newgen)):
+        for j in range(16):
+            newgen[i][j]+=r*random.randint(-5,5)
     return newgen 
 
 def crossover(gen1, gen2):
-    gena = gen1
-    genb = gen2
-    for i in range(r*random.randint(0,len(gena)-1)):
-        j = random.randint(0,len(gena)-1)
-        k = random.randint(0,len(gena)-1)
-        print("jk", j, k)
-        print(gena)
-        gena[j], genb[k] = gena[k], genb[j]
-    return gena
+    newgen = []
+    for i in range(len(gen1)):
+        tmp = []
+        for j in range(16):
+            if random.randint(1,numberofgeneration)<r:
+                tmp.append([gen1[i][j],gen2[i][j]][random.randint(0,1)])
+            tmp.append(gen1[i][j])
+        newgen.append(tmp)
+    return newgen
 
 
 creatures = initializeCreatures(numberofpopulation)
 bestCreature = simulateGeneration(creatures)
 newCreatures = initializeCreatures(numberofpopulation)
-creatures[1:numberofpopulation] = newCreatures[1:numberofpopulation]
-generateFitness(creatures)
-print(creatures[0]['fitness'])
+for i in range(newCreatures):
+    fitness += versus(5, bestCreature['tables'],tablesFromGen(newCreatures[i]['gen']))
+print(fitness/i)

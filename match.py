@@ -9,7 +9,7 @@ import time
 start_time = time.time()
 
 # input
-depth = 2
+depth = 1
 
 def tablesFromGen(gen):
     scoretables=[]
@@ -162,14 +162,6 @@ def match(i, numberofmatch, results, progresses, scoretables1, scoretables2):
             turn = 'player'
         numturn+=1
         
-        # For threading progress tracker
-        progresses[i]=numturn*5/3
-        tmp=0
-        for j in range(numberofmatch):
-            tmp+=progresses[j]
-        tmp/=numberofmatch
-        print('progress: %2s' % int(tmp),'%', end="\r")
-    
     # Calculate Fitness
     scores = getPointBoard(mainBoard) 
     if(scores[playerTile]>scores[computerTile]):
