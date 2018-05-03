@@ -3,6 +3,156 @@
 import random
 import sys
 
+# Copy from match.py
+# input
+depth = 2
+
+def getComputerMove(board, computerTile, scoretables):
+    # Given a board and the computer's tile, determine where to
+    # move and return that move as a [x, y] list.
+
+    global depth
+
+    possibleMoves = getValidMoves(board, computerTile)
+
+    # randomize the order of the possible moves
+    random.shuffle(possibleMoves)
+
+    # get the player tile (=oppTile)
+    if(computerTile=='X'):
+        oppTile='O'
+    else:
+        oppTile='X'
+
+    # Go through all the possible moves and remember the best scoring move
+    bestScore = -1e5
+
+    #to avoid bestMove referenced in the return function call before it is initialized
+    try:
+        bestMove = possibleMoves[0]
+    except:
+        bestMove=None
+
+    for x, y in possibleMoves:
+        #print("considering ", x+1, y+1) # ux
+        score = alphabeta(board, depth, -1e9, 1e9, computerTile, computerTile, scoretables) # get the state of the best minimax board
+
+        if score > bestScore:
+            bestMove = [x, y]
+            bestScore = score
+
+    return bestMove
+
+def alphabeta(board, depth, alpha, beta,computerTile, tile, scoretables):
+    # implementation of alphabeta pruning
+
+    possibleMoves = getValidMoves(board, tile)
+
+    # check for terminal node
+    if depth == 0 or possibleMoves == []:
+        scoretable=scoretables[stagecheck(board)]
+        return getScoreOfBoard(board, scoretable)[computerTile]
+
+    # get the player tile
+    oppTile = "X"
+    if(tile=="X"):
+        oppTile = "O"
+
+    if tile==computerTile: #if maximizing
+        v = -1e9
+
+        for x, y in possibleMoves:
+
+            # get the alphabeta of child
+            child = getBoardCopy(board)
+            makeMove(child, tile, x, y)
+            
+            # check which scoretable from scortables should be use
+            # using stage analysis
+            scoretable = scoretables[stagecheck(board)]
+            
+            v = alphabeta(child, depth-1, alpha, beta, computerTile, oppTile, scoretables)
+
+            alpha = max(alpha, v)
+
+            if beta<=alpha:
+                break
+        return v
+    else: # if minimizing
+        v = 1e9
+
+        for x, y in possibleMoves:
+
+            # get the alphabeta of child
+            child = getBoardCopy(board)
+            makeMove(child, tile, x, y)
+            
+            # check which scoretable from scortables should be use
+            # using stage analysis
+            scoretable = scoretables[stagecheck(board)]
+
+            v = alphabeta(child, depth-1, alpha, beta, computerTile, oppTile, scoretables)
+
+            beta = min(beta, v)
+
+            if beta<=alpha:
+                break
+        return v
+
+def stagecheck(board):
+    flag=0
+    for i in range(8):
+        if board[i][0]!=' ': flag=1
+        if board[i][1]!=' ': flag=1
+        if board[i][6]!=' ': flag=1
+        if board[i][7]!=' ': flag=1
+    for i in range(0,2):
+        for j in range(8):
+            if board[i][j]!=' ': flag=1
+    for i in range(6,8):
+        for j in range(8):
+            if board[i][j]!=' ': flag=1
+    if flag == 0:
+        if board[2][2]!=' ': flag=2
+        if board[2][5]!=' ': flag=2
+        if board[5][5]!=' ': flag=2
+        if board[5][2]!=' ': flag=2
+    elif flag == 1:
+        if board[1][1]!=' ': flag=3
+        if board[1][6]!=' ': flag=3
+        if board[6][6]!=' ': flag=3
+        if board[6][1]!=' ': flag=3
+    for i in range(0,8):
+        if board[0][i]!=' ': flag=4
+        if board[i][0]!=' ': flag=4
+        if board[7][i]!=' ': flag=4
+        if board[i][7]!=' ': flag=4
+
+    return flag
+
+# End of copy from match.py
+
+# copy from ga.py
+
+def tablesFromGen(gen):
+    scoretables=[]
+    for i in range(len(gen)):
+        tmp = gen[i]
+        scoretable = []
+        scoretable.append(tmp[0:4]+tmp[3::-1])
+        scoretable.append(tmp[4:8]+tmp[7:3:-1])
+        scoretable.append(tmp[8:12]+tmp[11:7:-1])
+        scoretable.append(tmp[12:16]+tmp[15:11:-1])
+        scoretable.append(tmp[12:16]+tmp[15:11:-1])
+        scoretable.append(tmp[8:12]+tmp[11:7:-1])
+        scoretable.append(tmp[4:8]+tmp[7:3:-1])
+        scoretable.append(tmp[0:4]+tmp[3::-1])
+        scoretables.append(scoretable)
+    return scoretables
+
+# end of copy from ga.py
+
+
 def drawBoard(board):
     # This function prints out the board that it was passed. Returns None.
     HLINE = '  +-----+-----+-----+-----+-----+-----+-----+-----+'
@@ -225,68 +375,89 @@ def showPoints(playerTile, computerTile, board):
     print('You have %s points. The computer has %s points.' % (scores[playerTile], scores[computerTile]))
 
 
-'''
-print('Welcome to Reversi!')
-
-while True:
-    # Reset the board and game.
-    mainBoard = getNewBoard()
-    resetBoard(mainBoard)
-    playerTile, computerTile = enterPlayerTile()
-    showHints = False
-    turn = whoGoesFirst()
-    print('The ' + turn + ' will go first.')
+def play():
+    print('Welcome to Reversi!')
+    
+    import csv
+    with open('try.csv', newline='\n') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        out = []
+        for row in spamreader:
+            out.append(row)
+        spamreader = out
+        
+        for i in range(40):
+            for j in range(8):
+                out[i][j] = int(out[i][j])
+                
+        scoretables = []
+        scoretables.append(spamreader[0:8])
+        scoretables.append(spamreader[8:16])
+        scoretables.append(spamreader[16:24])
+        scoretables.append(spamreader[24:32])
+        scoretables.append(spamreader[32:40])
+    
 
     while True:
-        if turn == 'player':
-            # Player's turn.
-            if showHints:
-                validMovesBoard = getBoardWithValidMoves(mainBoard, playerTile)
-                drawBoard(validMovesBoard)
-            else:
-                drawBoard(mainBoard)
-            if getValidMoves(mainBoard, playerTile) == []:
-                print("No valid moves\n")
-            else:
-                showPoints(playerTile, computerTile)
-                move = getPlayerMove(mainBoard, playerTile)
-                if move == 'quit':
-                    print('Thanks for playing!')
-                    sys.exit() # terminate the program
-                elif move == 'hints':
-                    showHints = not showHints
-                    continue
+        # Reset the board and game.
+        mainBoard = getNewBoard()
+        resetBoard(mainBoard)
+        playerTile, computerTile = enterPlayerTile()
+        showHints = False
+        turn = whoGoesFirst()
+        print('The ' + turn + ' will go first.')
+
+        while True:
+            if turn == 'player':
+                # Player's turn.
+                if showHints:
+                    validMovesBoard = getBoardWithValidMoves(mainBoard, playerTile)
+                    drawBoard(validMovesBoard)
                 else:
-                    makeMove(mainBoard, playerTile, move[0], move[1])
-            turn = 'computer'
-
-        else:
-            # Computer's turn.
-            drawBoard(mainBoard)
-            if getValidMoves(mainBoard, computerTile) == []:
+                    drawBoard(mainBoard)
                 if getValidMoves(mainBoard, playerTile) == []:
-                    print("Game ends: No move possible")
-                    break
-                print("No valid move\n")
+                    print("No valid moves\n")
+                else:
+                    showPoints(playerTile, computerTile, mainBoard)
+                    move = getPlayerMove(mainBoard, playerTile)
+                    if move == 'quit':
+                        print('Thanks for playing!')
+                        sys.exit() # terminate the program
+                    elif move == 'hints':
+                        showHints = not showHints
+                        continue
+                    else:
+                        makeMove(mainBoard, playerTile, move[0], move[1])
+                turn = 'computer'
+    
             else:
-                showPoints(playerTile, computerTile)
-                print("I'm thinking...")
-                x, y = getComputerMove(mainBoard, computerTile)
-                makeMove(mainBoard, computerTile, x, y)
-                print("My move: ", x+1, y+1)
-            turn = 'player'
+                # Computer's turn.
+                drawBoard(mainBoard)
+                if getValidMoves(mainBoard, computerTile) == []:
+                    if getValidMoves(mainBoard, playerTile) == []:
+                        print("Game ends: No move possible")
+                        break
+                    print("No valid move\n")
+                else:
+                    showPoints(playerTile, computerTile, mainBoard)
+                    print("I'm thinking...")
+                    x, y = getComputerMove(mainBoard, computerTile,scoretables)
+                    makeMove(mainBoard, computerTile, x, y)
+                    print("My move: ", x+1, y+1)
+                turn = 'player'
+    
+        # Display the final score.
+        drawBoard(mainBoard)
+        scores = getPointBoard(mainBoard)
+        print('X scored %s points. O scored %s points.' % (scores['X'], scores['O']))
+        if scores[playerTile] > scores[computerTile]:
+            print('You beat the computer by %s points! Congratulations!' % (scores[playerTile] - scores[computerTile]))
+        elif scores[playerTile] < scores[computerTile]:
+            print('You lost. The computer beat you by %s points.' % (scores[computerTile] - scores[playerTile]))
+        else:
+            print('The game was a tie!')
+    
+        if not playAgain():
+            break
 
-    # Display the final score.
-    drawBoard(mainBoard)
-    scores = getPointBoard(mainBoard)
-    print('X scored %s points. O scored %s points.' % (scores['X'], scores['O']))
-    if scores[playerTile] > scores[computerTile]:
-        print('You beat the computer by %s points! Congratulations!' % (scores[playerTile] - scores[computerTile]))
-    elif scores[playerTile] < scores[computerTile]:
-        print('You lost. The computer beat you by %s points.' % (scores[computerTile] - scores[playerTile]))
-    else:
-        print('The game was a tie!')
-
-    if not playAgain():
-        break
-'''
+play()
