@@ -93,6 +93,6 @@ def crossover(gen1, gen2):
 creatures = initializeCreatures(numberofpopulation)
 bestCreature = simulateGeneration(creatures)
 newCreatures = initializeCreatures(numberofpopulation)
-for i in range(newCreatures):
+for i in range(len(newCreatures)):
     fitness += versus(5, bestCreature['tables'],tablesFromGen(newCreatures[i]['gen']))
 print(fitness/i)
