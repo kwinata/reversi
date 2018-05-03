@@ -9,16 +9,7 @@ import time
 start_time = time.time()
 
 # input
-depth = 1
-
-def grst(): #generateRandomScoreTable
-    gen=[]
-    for i in range(2):
-        tmp = []
-        for j in range(16):
-            tmp.append(random.randint(0,63))
-        gen.append(tmp)
-    return tablesFromGen(gen)
+depth = 2
 
 def tablesFromGen(gen):
     scoretables=[]
