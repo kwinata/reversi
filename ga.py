@@ -1,10 +1,12 @@
 from match import *
 
 numberofmatch = 1
-numberofgeneration = 7
-numberofpopulation = 6
+numberofgeneration = 6
+numberofpopulation = 8
+populationheight = 3
 numberofancestor = 2
 numberofstages = 5
+r = 1
 
 def tablesFromGen(gen):
     scoretables=[]
@@ -35,21 +37,35 @@ def initializeCreatures(numberofpopulation):
         creatures.append({'fitness':0, 'gen': randomgen,'tables':tablesFromGen(randomgen)})
     return creatures
 
+def cupmatch(total,height,surv_creatures,numberofmatch):
+    surv=[]
+    lose=[]
+    for i in range(2 ** (height-1)):
+        matchResult=versus(numberofmatch,surv_creatures[2*i]['tables'],surv_creatures[(2*i)+1]['tables'])
+        if matchResult>0.5:
+            surv.append(surv_creatures[2*i])
+            lose.append(surv_creatures[(2*i)+1])
+        else:
+            lose.append(surv_creatures[2*i])
+            surv.append(surv_creatures[(2*i)+1])
+    for i in range(2**(height-1)):
+        lose[i]['fitness']=(total-height)/total
+    if(len(surv)==1):
+        surv[0]['fitness']=1
+        return lose + surv
+    return lose + cupmatch(total,height-1,surv,numberofmatch)
+        
+
 def generateFitness(creatures):
     l = len(creatures)
-    for i in range(l-1):
-        for j in range(i+1,l):
-            matchResult=versus(numberofmatch,creatures[i]['tables'],creatures[j]['tables'])
-            print(i, j, 'result:', matchResult)
-            creatures[i]['fitness']+=matchResult
-            creatures[j]['fitness']+=(1-matchResult)
-    for i in range(0,l):
-        creatures[i]['fitness']
+    result = cupmatch(populationheight, populationheight,creatures,numberofmatch)    
+    for i in range(l):
+        creatures[i]=result[i]
 
 def simulateGeneration(creatures):
     for i in range(numberofgeneration):
         print('\n\n== Generation', i+1)
-
+        global r
         r = numberofgeneration - i - 1
         for j in range(numberofpopulation):
             creatures[j]['fitness']=0
