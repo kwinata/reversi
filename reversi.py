@@ -2,11 +2,12 @@ import random
 import sys
 
 
-tile_1 = 'X'
-tile_2 = 'O'
+tile_1 = '#'
+tile_2 = '.'
+tile_hint = '?'
 
 def draw_board(board):
-    horizontal_line = '  +---+---+---+---+---+---+---+---+'
+    horizontal_line = '  ---------------------------------'
 
     print()
     print('    1   2   3   4   5   6   7   8')
@@ -22,12 +23,11 @@ def draw_board(board):
 
 
 def reset_board(board):
-    # Blanks out the board it is passed, except for the original starting position.
     for x in range(8):
         for y in range(8):
             board[x][y] = ' '
 
-    # Starting pieces:
+    # Starting pieces
     board[3][3] = tile_1
     board[3][4] = tile_2
     board[4][3] = tile_2
@@ -99,7 +99,7 @@ def getBoardWithValidMoves(board, tile):
     dupeBoard = getBoardCopy(board)
 
     for x, y in getValidMoves(dupeBoard, tile):
-        dupeBoard[x][y] = '.'
+        dupeBoard[x][y] = tile_hint
     return dupeBoard
 
 
