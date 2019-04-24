@@ -4,18 +4,18 @@ import sys
 
 def draw_board(board):
     horizontal_line = '  +---+---+---+---+---+---+---+---+'
-    vertical_line = '  |     |     |     |     |     |     |     |     |'
 
+    print()
+    print('    1   2   3   4   5   6   7   8')
     print(horizontal_line)
-
     for y in range(8):
         print(y+1, end=' ')
         for x in range(8):
-            print('| %s' % (board[x][y]), end=' ')
-        print('|')
+            print('| ' + board[x][y], end=' ')
+        print('| ' + str(y+1))
         print(horizontal_line)
     print('    1   2   3   4   5   6   7   8')
-
+    print()
 
 def resetBoard(board):
     # Blanks out the board it is passed, except for the original starting position.
