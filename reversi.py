@@ -2,6 +2,9 @@ import random
 import sys
 
 
+tile_1 = 'X'
+tile_2 = 'O'
+
 def draw_board(board):
     horizontal_line = '  +---+---+---+---+---+---+---+---+'
 
@@ -17,17 +20,18 @@ def draw_board(board):
     print('    1   2   3   4   5   6   7   8')
     print()
 
-def resetBoard(board):
+
+def reset_board(board):
     # Blanks out the board it is passed, except for the original starting position.
     for x in range(8):
         for y in range(8):
             board[x][y] = ' '
 
     # Starting pieces:
-    board[3][3] = 'X'
-    board[3][4] = 'O'
-    board[4][3] = 'O'
-    board[4][4] = 'X'
+    board[3][3] = tile_1
+    board[3][4] = tile_2
+    board[4][3] = tile_2
+    board[4][4] = tile_1
 
 
 def getNewBoard():
@@ -47,10 +51,10 @@ def isValidMove(board, tile, xstart, ystart):
 
     board[xstart][ystart] = tile # temporarily set the tile on the board.
 
-    if tile == 'X':
-        otherTile = 'O'
+    if tile == tile_1:
+        otherTile = tile_2
     else:
-        otherTile = 'X'
+        otherTile = tile_1
 
     tilesToFlip = []
     for xdirection, ydirection in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
@@ -121,44 +125,44 @@ scoretable.append([-8, -24, -4, -3, -3, -4, -24, -8])
 scoretable.append([99, -8, 8, 6, 6, 8, -8, 99])
 
 def getScoreOfBoard(board):
-    # Determine the score by counting the tiles. Returns a dictionary with keys 'X' and 'O'.
+    # Determine the score by counting the tiles. Returns a dictionary with keys tile_1 and tile_2.
     global scoretable
     xscore = 0
     oscore = 0
     for x in range(8):
         for y in range(8):
-            if board[x][y] == 'X':
+            if board[x][y] == tile_1:
                 xscore += 3
-            if board[x][y] == 'O':
+            if board[x][y] == tile_2:
                 oscore += 3
-    return {'X':xscore, 'O':oscore}
+    return {tile_1:xscore, tile_2:oscore}
 
 def getPointBoard(board):
-    # Determine the score by counting the tiles. Returns a dictionary with keys 'X' and 'O'.
+    # Determine the score by counting the tiles. Returns a dictionary with keys tile_1 and tile_2.
     xscore = 0
     oscore = 0
     for x in range(8):
         for y in range(8):
-            if board[x][y] == 'X':
+            if board[x][y] == tile_1:
                 xscore += 1
-            if board[x][y] == 'O':
+            if board[x][y] == tile_2:
                 oscore += 1
-    return {'X':xscore, 'O':oscore}
+    return {tile_1:xscore, tile_2:oscore}
 
 
 def enterPlayerTile():
     # Lets the player type which tile they want to be.
     # Returns a list with the player's tile as the first item, and the computer's tile as the second.
     tile = ''
-    while not (tile == 'X' or tile == 'O'):
-        print('Do you want to be X or O?')
+    while not (tile == tile_1 or tile == tile_2):
+        print('Do you want to be %s or %s?' % (tile_1, tile_2))
         tile = input().upper()
 
     # the first element in the tuple is the player's tile, the second is the computer's tile.
-    if tile == 'X':
-        return ['X', 'O']
+    if tile == tile_1:
+        return [tile_1, tile_2]
     else:
-        return ['O', 'X']
+        return [tile_2, tile_1]
 
 
 def whoGoesFirst():
@@ -238,10 +242,10 @@ def getComputerMove(board, computerTile):
     random.shuffle(possibleMoves)
 
     # get the player tile (=oppTile)
-    if(computerTile=='X'):
-        oppTile='O'
+    if(computerTile==tile_1):
+        oppTile=tile_2
     else:
-        oppTile='X'
+        oppTile=tile_1
 
     # Go through all the possible moves and remember the best scoring move
     bestScore = -1e5
@@ -325,7 +329,7 @@ print('Welcome to Reversi!')
 while True:
     # Reset the board and game.
     mainBoard = getNewBoard()
-    resetBoard(mainBoard)
+    reset_board(mainBoard)
     playerTile, computerTile = enterPlayerTile()
     showHints = False
     turn = whoGoesFirst()
@@ -373,7 +377,7 @@ while True:
     # Display the final score.
     draw_board(mainBoard)
     scores = getPointBoard(mainBoard)
-    print('X scored %s points. O scored %s points.' % (scores['X'], scores['O']))
+    print('%s scored %s points. %s scored %s points.' % (tile_1, scores[tile_1], tile_2, scores[tile_2]))
     if scores[playerTile] > scores[computerTile]:
         print('You beat the computer by %s points! Congratulations!' % (scores[playerTile] - scores[computerTile]))
     elif scores[playerTile] < scores[computerTile]:
