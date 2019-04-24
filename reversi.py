@@ -1,23 +1,20 @@
-# Reversi
-
 import random
 import sys
 
-def drawBoard(board):
-    # This function prints out the board that it was passed. Returns None.
-    HLINE = '  +-----+-----+-----+-----+-----+-----+-----+-----+'
-    VLINE = '  |     |     |     |     |     |     |     |     |'
 
-    print('     1     2     3     4     5     6     7     8')
-    print(HLINE)
+def draw_board(board):
+    horizontal_line = '  +---+---+---+---+---+---+---+---+'
+    vertical_line = '  |     |     |     |     |     |     |     |     |'
+
+    print(horizontal_line)
+
     for y in range(8):
-        print(VLINE)
         print(y+1, end=' ')
         for x in range(8):
-            print('|  %s ' % (board[x][y]), end=' ')
+            print('| %s' % (board[x][y]), end=' ')
         print('|')
-        print(VLINE)
-        print(HLINE)
+        print(horizontal_line)
+    print('    1   2   3   4   5   6   7   8')
 
 
 def resetBoard(board):
@@ -339,9 +336,9 @@ while True:
             # Player's turn.
             if showHints:
                 validMovesBoard = getBoardWithValidMoves(mainBoard, playerTile)
-                drawBoard(validMovesBoard)
+                draw_board(validMovesBoard)
             else:
-                drawBoard(mainBoard)
+                draw_board(mainBoard)
             if getValidMoves(mainBoard, playerTile) == []:
                 print("No valid moves\n")
             else:
@@ -359,7 +356,7 @@ while True:
 
         else:
             # Computer's turn.
-            drawBoard(mainBoard)
+            draw_board(mainBoard)
             if getValidMoves(mainBoard, computerTile) == []:
                 if getValidMoves(mainBoard, playerTile) == []:
                     print("Game ends: No move possible")
@@ -374,7 +371,7 @@ while True:
             turn = 'player'
 
     # Display the final score.
-    drawBoard(mainBoard)
+    draw_board(mainBoard)
     scores = getPointBoard(mainBoard)
     print('X scored %s points. O scored %s points.' % (scores['X'], scores['O']))
     if scores[playerTile] > scores[computerTile]:
