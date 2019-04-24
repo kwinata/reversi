@@ -94,13 +94,13 @@ def is_on_board(x, y):
     return 0 <= x <= 7 and 0 <= y <= 7
 
 
-def getBoardWithValidMoves(board, tile):
-    # Returns a new board with . marking the valid moves the given player can make.
-    dupeBoard = getBoardCopy(board)
+def get_board_with_hints(board, tile):
+    new_board_for_printing_only = getBoardCopy(board)
 
-    for x, y in getValidMoves(dupeBoard, tile):
-        dupeBoard[x][y] = tile_hint
-    return dupeBoard
+    for x, y in getValidMoves(new_board_for_printing_only, tile):
+        new_board_for_printing_only[x][y] = tile_hint
+
+    return new_board_for_printing_only
 
 
 def getValidMoves(board, tile):
@@ -339,7 +339,7 @@ while True:
         if turn == 'player':
             # Player's turn.
             if showHints:
-                validMovesBoard = getBoardWithValidMoves(mainBoard, playerTile)
+                validMovesBoard = get_board_with_hints(mainBoard, playerTile)
                 draw_board(validMovesBoard)
             else:
                 draw_board(mainBoard)
