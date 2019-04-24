@@ -6,6 +6,7 @@ tile_1 = '#'
 tile_2 = '.'
 tile_hint = '?'
 
+
 def draw_board(board):
     horizontal_line = '  ---------------------------------'
 
@@ -34,9 +35,9 @@ def reset_board(board):
     board[4][4] = tile_1
 
 
-def getNewBoard():
-    # Creates a brand new, blank board data structure.
+def get_blank_board():
     board = []
+
     for i in range(8):
         board.append([' '] * 8)
 
@@ -195,7 +196,7 @@ def makeMove(board, tile, xstart, ystart):
 
 def getBoardCopy(board):
     # Make a duplicate of the board list and return the duplicate.
-    dupeBoard = getNewBoard()
+    dupeBoard = get_blank_board()
 
     for x in range(8):
         for y in range(8):
@@ -328,7 +329,7 @@ print('Welcome to Reversi!')
 
 while True:
     # Reset the board and game.
-    mainBoard = getNewBoard()
+    mainBoard = get_blank_board()
     reset_board(mainBoard)
     playerTile, computerTile = enterPlayerTile()
     showHints = False
