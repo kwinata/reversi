@@ -17,7 +17,7 @@ class InvalidLocationException(ReversiException):
         return self.__name__
 
 
-class Cell:
+class Location:
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -37,7 +37,7 @@ class Cell:
             self.y += direction[1]
 
     def copy(self):
-        return Cell(self.x, self.y)
+        return Location(self.x, self.y)
 
 
 def draw_board(board):
@@ -88,21 +88,21 @@ def get_tiles_to_flip_for_move(board, xstart, ystart, tile):
     else:
         other_tile = tile_1
 
-    start_cell = Cell(xstart, ystart)
+    start_loc = Location(xstart, ystart)
 
     tiles_to_flip = []
     for direction in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
-        current_cell = start_cell.copy()
-        current_cell.offset(direction)
-        while is_on_board(current_cell.x, current_cell.y) and board[current_cell.x][current_cell.y] == other_tile:
-            current_cell.offset(direction)
-        if not is_on_board(current_cell.x, current_cell.y):
+        current_loc = start_loc.copy()
+        current_loc.offset(direction)
+        while is_on_board(current_loc.x, current_loc.y) and board[current_loc.x][current_loc.y] == other_tile:
+            current_loc.offset(direction)
+        if not is_on_board(current_loc.x, current_loc.y):
             continue
-        if board[current_cell.x][current_cell.y] == tile:
-            current_cell.offset(direction, reverse=True)
-            while current_cell != start_cell:
-                tiles_to_flip.append([current_cell.x, current_cell.y])
-                current_cell.offset(direction, reverse=True)
+        if board[current_loc.x][current_loc.y] == tile:
+            current_loc.offset(direction, reverse=True)
+            while current_loc != start_loc:
+                tiles_to_flip.append([current_loc.x, current_loc.y])
+                current_loc.offset(direction, reverse=True)
     return tiles_to_flip
 
 
