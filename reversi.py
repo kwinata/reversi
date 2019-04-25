@@ -61,22 +61,22 @@ def check_valid_location(board, x, y):
 
 def get_tiles_to_flip_for_move(board, xstart, ystart, tile):
     if tile == tile_1:
-        otherTile = tile_2
+        other_tile = tile_2
     else:
-        otherTile = tile_1
+        other_tile = tile_1
 
-    tilesToFlip = []
+    tiles_to_flip = []
     for xdirection, ydirection in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
         x, y = xstart, ystart
         x += xdirection # first step in the direction
         y += ydirection # first step in the direction
-        if is_on_board(x, y) and board[x][y] == otherTile:
+        if is_on_board(x, y) and board[x][y] == other_tile:
             # There is a piece belonging to the other player next to our piece.
             x += xdirection
             y += ydirection
             if not is_on_board(x, y):
                 continue
-            while board[x][y] == otherTile:
+            while board[x][y] == other_tile:
                 x += xdirection
                 y += ydirection
                 if not is_on_board(x, y): # break out of while loop, then continue in for loop
@@ -90,8 +90,8 @@ def get_tiles_to_flip_for_move(board, xstart, ystart, tile):
                     y -= ydirection
                     if x == xstart and y == ystart:
                         break
-                    tilesToFlip.append([x, y])
-    return tilesToFlip
+                    tiles_to_flip.append([x, y])
+    return tiles_to_flip
 
 
 def get_move_result(board, tile, xstart, ystart):
@@ -103,11 +103,11 @@ def get_move_result(board, tile, xstart, ystart):
     except:
         return False
 
-    tilesToFlip = get_tiles_to_flip_for_move(board, xstart, ystart, tile)
+    tiles_to_flip = get_tiles_to_flip_for_move(board, xstart, ystart, tile)
 
-    if len(tilesToFlip) == 0: # If no tiles were flipped, this is not a valid move.
+    if len(tiles_to_flip) == 0: # If no tiles were flipped, this is not a valid move.
         return False
-    return tilesToFlip
+    return tiles_to_flip
 
 
 def is_valid_move(board, tile, xstart, ystart):
@@ -208,13 +208,13 @@ def playAgain():
 def makeMove(board, tile, xstart, ystart):
     # Place the tile on the board at xstart, ystart, and flip any of the opponent's pieces.
     # Returns False if this is an invalid move, True if it is valid.
-    tilesToFlip = get_move_result(board, tile, xstart, ystart)
+    tiles_to_flip = get_move_result(board, tile, xstart, ystart)
 
-    if tilesToFlip == False:
+    if tiles_to_flip == False:
         return False
 
     board[xstart][ystart] = tile
-    for x, y in tilesToFlip:
+    for x, y in tiles_to_flip:
         board[x][y] = tile
     return True
 
