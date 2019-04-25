@@ -36,6 +36,9 @@ class Cell:
             self.x += direction[0]
             self.y += direction[1]
 
+    def copy(self):
+        return Cell(self.x, self.y)
+
 
 def draw_board(board):
     horizontal_line = '  ---------------------------------'
@@ -89,7 +92,7 @@ def get_tiles_to_flip_for_move(board, xstart, ystart, tile):
 
     tiles_to_flip = []
     for direction in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
-        current_cell = Cell(start_cell.x, start_cell.y)
+        current_cell = start_cell.copy()
         current_cell.offset(direction)
         while is_on_board(current_cell.x, current_cell.y) and board[current_cell.x][current_cell.y] == other_tile:
             current_cell.offset(direction)
