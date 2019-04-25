@@ -17,6 +17,26 @@ class InvalidLocationException(ReversiException):
         return self.__name__
 
 
+class Cell:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __str__(self):
+        return "({}, {})".format(self.x + 1, self.y + 1)
+
+    def offset(self, direction, reverse=False):
+        if reverse:
+            self.x -= direction[0]
+            self.y -= direction[1]
+        else:
+            self.x += direction[0]
+            self.y += direction[1]
+
+
 def draw_board(board):
     horizontal_line = '  ---------------------------------'
 
@@ -65,32 +85,24 @@ def get_tiles_to_flip_for_move(board, xstart, ystart, tile):
     else:
         other_tile = tile_1
 
+    start_cell = Cell(xstart, ystart)
+
     tiles_to_flip = []
-    for xdirection, ydirection in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
-        x, y = xstart, ystart
-        x += xdirection # first step in the direction
-        y += ydirection # first step in the direction
-        if is_on_board(x, y) and board[x][y] == other_tile:
-            # There is a piece belonging to the other player next to our piece.
-            x += xdirection
-            y += ydirection
-            if not is_on_board(x, y):
+    for direction in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
+        current_cell = Cell(start_cell.x, start_cell.y)
+        current_cell.offset(direction)
+        if is_on_board(current_cell.x, current_cell.y) and board[current_cell.x][current_cell.y] == other_tile:
+            current_cell.offset(direction)
+            while is_on_board(current_cell.x, current_cell.y) and board[current_cell.x][current_cell.y] == other_tile:
+                current_cell.offset(direction)
+            if not is_on_board(current_cell.x, current_cell.y):
                 continue
-            while board[x][y] == other_tile:
-                x += xdirection
-                y += ydirection
-                if not is_on_board(x, y): # break out of while loop, then continue in for loop
-                    break
-            if not is_on_board(x, y):
-                continue
-            if board[x][y] == tile:
-                # There are pieces to flip over. Go in the reverse direction until we reach the original space, noting all the tiles along the way.
+            if board[current_cell.x][current_cell.y] == tile:
                 while True:
-                    x -= xdirection
-                    y -= ydirection
-                    if x == xstart and y == ystart:
+                    current_cell.offset(direction, reverse=True)
+                    if current_cell == start_cell:
                         break
-                    tiles_to_flip.append([x, y])
+                    tiles_to_flip.append([current_cell.x, current_cell.y])
     return tiles_to_flip
 
 
