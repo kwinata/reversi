@@ -98,11 +98,10 @@ def get_tiles_to_flip_for_move(board, xstart, ystart, tile):
             if not is_on_board(current_cell.x, current_cell.y):
                 continue
             if board[current_cell.x][current_cell.y] == tile:
-                while True:
-                    current_cell.offset(direction, reverse=True)
-                    if current_cell == start_cell:
-                        break
+                current_cell.offset(direction, reverse=True)
+                while current_cell != start_cell:
                     tiles_to_flip.append([current_cell.x, current_cell.y])
+                    current_cell.offset(direction, reverse=True)
     return tiles_to_flip
 
 
