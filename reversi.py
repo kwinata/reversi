@@ -8,6 +8,15 @@ tile_2 = '.'
 tile_hint = '?'
 
 
+class ReversiException(Exception):
+    pass
+
+
+class InvalidLocationException(ReversiException):
+    def __str__(self):
+        return self.__name__
+
+
 def draw_board(board):
     horizontal_line = '  ---------------------------------'
 
@@ -45,14 +54,12 @@ def get_blank_board():
     return board
 
 
-def get_move_result(board, tile, xstart, ystart):
-    # Returns False if the player's move on space xstart, ystart is invalid.
-    # If it is a valid move, returns a list of spaces that would become the player's if they made a move here.
-    if board[xstart][ystart] != ' ' or not is_on_board(xstart, ystart):
-        return False
+def check_valid_location(board, x, y):
+    if board[x][y] != ' ' or not is_on_board(x, y):
+        raise InvalidLocationException()
 
-    board[xstart][ystart] = tile # temporarily set the tile on the board.
 
+def get_tiles_to_flip_for_move(board, xstart, ystart, tile):
     if tile == tile_1:
         otherTile = tile_2
     else:
@@ -84,53 +91,28 @@ def get_move_result(board, tile, xstart, ystart):
                     if x == xstart and y == ystart:
                         break
                     tilesToFlip.append([x, y])
+    return tilesToFlip
 
-    board[xstart][ystart] = ' ' # restore the empty space
+
+def get_move_result(board, tile, xstart, ystart):
+    # Returns False if the player's move on space xstart, ystart is invalid.
+    # If it is a valid move, returns a list of spaces that would become the player's if they made a move here.
+
+    try:
+        check_valid_location(board, xstart, ystart)
+    except:
+        return False
+
+    tilesToFlip = get_tiles_to_flip_for_move(board, xstart, ystart, tile)
+
     if len(tilesToFlip) == 0: # If no tiles were flipped, this is not a valid move.
         return False
     return tilesToFlip
 
 
 def is_valid_move(board, tile, xstart, ystart):
-    board = copy.deepcopy(board)
-    # Returns False if the player's move on space xstart, ystart is invalid.
-    # If it is a valid move, returns a list of spaces that would become the player's if they made a move here.
-    if board[xstart][ystart] != ' ' or not is_on_board(xstart, ystart):
-        return False
-
-    board[xstart][ystart] = tile  # temporarily set the tile on the board.
-
-    if tile == tile_1:
-        otherTile = tile_2
-    else:
-        otherTile = tile_1
-
-    tilesToFlip = []
-    for xdirection, ydirection in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
-        x, y = xstart, ystart
-        x += xdirection  # first step in the direction
-        y += ydirection  # first step in the direction
-        if is_on_board(x, y) and board[x][y] == otherTile:
-            # There is a piece belonging to the other player next to our piece.
-            x += xdirection
-            y += ydirection
-            if not is_on_board(x, y):
-                continue
-            while board[x][y] == otherTile:
-                x += xdirection
-                y += ydirection
-                if not is_on_board(x, y):  # break out of while loop, then continue in for loop
-                    break
-            if not is_on_board(x, y):
-                continue
-            if board[x][y] == tile:
-                # There are pieces to flip over. Go in the reverse direction until we reach the original space, noting all the tiles along the way.
-                while True:
-                    x -= xdirection
-                    y -= ydirection
-                    if x == xstart and y == ystart:
-                        break
-                    return True
+    if get_move_result(board, tile, xstart, ystart):
+        return True
     return False
 
 
