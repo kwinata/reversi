@@ -1,12 +1,22 @@
-import sys
-
 from reversi import Board
 
 tile_1 = '#'
 tile_2 = '.'
 tile_hint = '?'
 
+
+class MyInput:
+    args = [tile_1, "quit"]
+
+    @staticmethod
+    def getInput():
+        # return input()
+        return MyInput.args.pop(0)
+
+
 class Interface:
+    mainBoard = None
+
     @staticmethod
     def enterPlayerTile():
         # Lets the player type which tile they want to be.
@@ -14,7 +24,7 @@ class Interface:
         tile = ''
         while not (tile == tile_1 or tile == tile_2):
             print('Do you want to be %s or %s?' % (tile_1, tile_2))
-            tile = input().upper()
+            tile = MyInput.getInput().upper()
 
         # the first element in the tuple is the player's tile, the second is the computer's tile.
         if tile == tile_1:
@@ -30,7 +40,7 @@ class Interface:
     def playAgain():
         # This function returns True if the player wants to play again, otherwise it returns False.
         print('Do you want to play again? (yes or no)')
-        return input().lower().startswith('y')
+        return MyInput.getInput().lower().startswith('y')
 
 
     @staticmethod
@@ -40,7 +50,7 @@ class Interface:
         DIGITS1TO8 = '1 2 3 4 5 6 7 8'.split()
         while True:
             print('Enter your move, or type quit to end the game, or hints to turn off/on hints.')
-            move = input().lower()
+            move = MyInput.getInput().lower()
             if move == 'quit':
                 return 'quit'
             if move == 'hints':
@@ -107,6 +117,7 @@ class Interface:
             # Reset the board and game.
             mainBoard = Board.get_blank_board()
             mainBoard.reset_board()
+            Interface.mainBoard = mainBoard
             playerTile, computerTile = Interface.enterPlayerTile()
             showHints = False
             turn = Interface.whoGoesFirst()
@@ -127,7 +138,8 @@ class Interface:
                         move = Interface.getPlayerMove(mainBoard, playerTile)
                         if move == 'quit':
                             print('Thanks for playing!')
-                            sys.exit()  # terminate the program
+                            # sys.exit()  # terminate the program
+                            return
                         elif move == 'hints':
                             showHints = not showHints
                             continue
