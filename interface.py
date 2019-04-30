@@ -1,4 +1,3 @@
-import random
 import sys
 
 from reversi import Board
@@ -25,11 +24,7 @@ class Interface:
 
     @staticmethod
     def whoGoesFirst():
-        # Randomly choose the player who goes first.
-        if random.randint(0, 1) == 0:
-            return 'computer'
-        else:
-            return 'player'
+        return 'player'
 
     @staticmethod
     def playAgain():
@@ -70,9 +65,6 @@ class Interface:
         # move and return that move as a [x, y] list.
 
         possibleMoves = board.getValidMoves(computerTile)
-
-        # randomize the order of the possible moves
-        random.shuffle(possibleMoves)
 
         # get the player tile (=oppTile)
         if(computerTile==tile_1):
