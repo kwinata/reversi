@@ -43,20 +43,13 @@ class Location:
 class Board:
     board = None
 
-    def draw_board(self):
-        horizontal_line = '  ---------------------------------'
+    def __init__(self):
+        board_content = []
+        for i in range(8):
+            board_content.append([' '] * 8)
+        self.board = board_content
 
-        print()
-        print('    1   2   3   4   5   6   7   8')
-        print(horizontal_line)
-        for y in range(8):
-            print(y + 1, end=' ')
-            for x in range(8):
-                print('| ' + self.board[x][y], end=' ')
-            print('| ' + str(y + 1))
-            print(horizontal_line)
-        print('    1   2   3   4   5   6   7   8')
-        print()
+
 
     def reset_board(self):
         for x in range(8):
@@ -68,18 +61,6 @@ class Board:
         self.board[3][4] = tile_2
         self.board[4][3] = tile_2
         self.board[4][4] = tile_1
-
-    @staticmethod
-    def get_blank_board():
-        board_content = []
-
-        for i in range(8):
-            board_content.append([' '] * 8)
-
-        board = Board()
-        board.board = board_content
-
-        return board
 
     def check_valid_location(self, x, y):
         if self.board[x][y] != ' ' or not Location(x, y).is_on_board():
@@ -128,8 +109,6 @@ class Board:
             return True
         return False
 
-
-
     def get_board_with_hints(self, tile):
         new_board_for_printing_only = self.getBoardCopy()
 
@@ -147,7 +126,6 @@ class Board:
                 if self.is_valid_move(tile, x, y) != False:
                     validMoves.append([x, y])
         return validMoves
-
 
     def getScoreOfBoard(self):
         # Determine the score by counting the tiles. Returns a dictionary with keys tile_1 and tile_2.
@@ -172,7 +150,6 @@ class Board:
                 if self.board[x][y] == tile_2:
                     oscore += 1
         return {tile_1:xscore, tile_2:oscore}
-
 
     def makeMove(self, tile, xstart, ystart):
         # Place the tile on the board at xstart, ystart, and flip any of the opponent's pieces.

@@ -18,6 +18,22 @@ class Interface:
     mainBoard = None
 
     @staticmethod
+    def draw_board(board):
+        horizontal_line = '  ---------------------------------'
+
+        print()
+        print('    1   2   3   4   5   6   7   8')
+        print(horizontal_line)
+        for y in range(8):
+            print(y + 1, end=' ')
+            for x in range(8):
+                print('| ' + board.board[x][y], end=' ')
+            print('| ' + str(y + 1))
+            print(horizontal_line)
+        print('    1   2   3   4   5   6   7   8')
+        print()
+
+    @staticmethod
     def enterPlayerTile():
         # Lets the player type which tile they want to be.
         # Returns a list with the player's tile as the first item, and the computer's tile as the second.
@@ -115,7 +131,7 @@ class Interface:
 
         while True:
             # Reset the board and game.
-            mainBoard = Board.get_blank_board()
+            mainBoard = Board()
             mainBoard.reset_board()
             Interface.mainBoard = mainBoard
             playerTile, computerTile = Interface.enterPlayerTile()
@@ -128,9 +144,9 @@ class Interface:
                     # Player's turn.
                     if showHints:
                         validMovesBoard = mainBoard.get_board_with_hints(playerTile)
-                        validMovesBoard.draw_board()
+                        Interface.draw_board(validMovesBoard)
                     else:
-                        mainBoard.draw_board()
+                        Interface.draw_board(mainBoard)
                     if mainBoard.getValidMoves(playerTile) == []:
                         print("No valid moves\n")
                     else:
@@ -149,7 +165,7 @@ class Interface:
 
                 else:
                     # Computer's turn.
-                    mainBoard.draw_board()
+                    Interface.draw_board(mainBoard)
                     if mainBoard.getValidMoves(computerTile) == []:
                         if mainBoard.getValidMoves(playerTile) == []:
                             print("Game ends: No move possible")
@@ -164,7 +180,7 @@ class Interface:
                     turn = 'player'
 
             # Display the final score.
-            mainBoard.draw_board()
+            Interface.draw_board(mainBoard)
             scores = mainBoard.getPointBoard()
             print('%s scored %s points. %s scored %s points.' % (tile_1, scores[tile_1], tile_2, scores[tile_2]))
             if scores[playerTile] > scores[computerTile]:
