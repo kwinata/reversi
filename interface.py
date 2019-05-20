@@ -1,12 +1,9 @@
 from reversi import Board
-
-tile_1 = '#'
-tile_2 = '.'
-tile_hint = '?'
+from settings import Settings
 
 
 class MyInput:
-    args = [tile_1, "quit"]
+    args = [Settings.tile_1, "quit"]
 
     @staticmethod
     def getInput():
@@ -38,15 +35,15 @@ class Interface:
         # Lets the player type which tile they want to be.
         # Returns a list with the player's tile as the first item, and the computer's tile as the second.
         tile = ''
-        while not (tile == tile_1 or tile == tile_2):
-            print('Do you want to be %s or %s?' % (tile_1, tile_2))
+        while not (tile == Settings.tile_1 or tile == Settings.tile_2):
+            print('Do you want to be %s or %s?' % (Settings.tile_1, Settings.tile_2))
             tile = MyInput.getInput().upper()
 
         # the first element in the tuple is the player's tile, the second is the computer's tile.
-        if tile == tile_1:
-            return [tile_1, tile_2]
+        if tile == Settings.tile_1:
+            return [Settings.tile_1, Settings.tile_2]
         else:
-            return [tile_2, tile_1]
+            return [Settings.tile_2, Settings.tile_1]
 
     @staticmethod
     def whoGoesFirst():
@@ -93,10 +90,10 @@ class Interface:
         possibleMoves = board.getValidMoves(computerTile)
 
         # get the player tile (=oppTile)
-        if(computerTile==tile_1):
-            oppTile=tile_2
+        if(computerTile==Settings.tile_1):
+            oppTile=Settings.tile_2
         else:
-            oppTile=tile_1
+            oppTile=Settings.tile_1
 
         # Go through all the possible moves and remember the best scoring move
         bestScore = -1e5
@@ -125,74 +122,7 @@ class Interface:
         scores = mainBoard.getPointBoard()
         print('You have %s points. The computer has %s points.' % (scores[playerTile], scores[computerTile]))
 
-    @staticmethod
-    def main():
-        print('Welcome to Reversi!')
 
-        while True:
-            # Reset the board and game.
-            mainBoard = Board()
-            mainBoard.reset_board()
-            Interface.mainBoard = mainBoard
-            playerTile, computerTile = Interface.enterPlayerTile()
-            showHints = False
-            turn = Interface.whoGoesFirst()
-            print('The ' + turn + ' will go first.')
-
-            while True:
-                if turn == 'player':
-                    # Player's turn.
-                    if showHints:
-                        validMovesBoard = mainBoard.get_board_with_hints(playerTile)
-                        Interface.draw_board(validMovesBoard)
-                    else:
-                        Interface.draw_board(mainBoard)
-                    if mainBoard.getValidMoves(playerTile) == []:
-                        print("No valid moves\n")
-                    else:
-                        Interface.show_points(playerTile, computerTile, mainBoard)
-                        move = Interface.getPlayerMove(mainBoard, playerTile)
-                        if move == 'quit':
-                            print('Thanks for playing!')
-                            # sys.exit()  # terminate the program
-                            return
-                        elif move == 'hints':
-                            showHints = not showHints
-                            continue
-                        else:
-                            mainBoard.makeMove(playerTile, move[0], move[1])
-                    turn = 'computer'
-
-                else:
-                    # Computer's turn.
-                    Interface.draw_board(mainBoard)
-                    if mainBoard.getValidMoves(computerTile) == []:
-                        if mainBoard.getValidMoves(playerTile) == []:
-                            print("Game ends: No move possible")
-                            break
-                        print("No valid move\n")
-                    else:
-                        Interface.show_points(playerTile, computerTile, mainBoard)
-                        print("I'm thinking...")
-                        x, y = Interface.getComputerMove(mainBoard, computerTile)
-                        mainBoard.makeMove(computerTile, x, y)
-                        print("My move: ", x + 1, y + 1)
-                    turn = 'player'
-
-            # Display the final score.
-            Interface.draw_board(mainBoard)
-            scores = mainBoard.getPointBoard()
-            print('%s scored %s points. %s scored %s points.' % (tile_1, scores[tile_1], tile_2, scores[tile_2]))
-            if scores[playerTile] > scores[computerTile]:
-                print('You beat the computer by %s points! Congratulations!' % (
-                            scores[playerTile] - scores[computerTile]))
-            elif scores[playerTile] < scores[computerTile]:
-                print('You lost. The computer beat you by %s points.' % (scores[computerTile] - scores[playerTile]))
-            else:
-                print('The game was a tie!')
-
-            if not Interface.playAgain():
-                break
 
 
 class Algorithm:
@@ -256,7 +186,3 @@ class Algorithm:
                 if beta<=alpha:
                     break
             return v
-
-Interface.main()
-
-

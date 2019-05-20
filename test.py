@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from interface import Interface, MyInput
+from manager import Manager
 
 tile_1 = '#'
 tile_2 = '.'
@@ -11,7 +12,7 @@ class InterfaceTest(TestCase):
 
     def play(self, args, expPlayerScore, expComputerScore):
         MyInput.args = args
-        Interface.main()
+        Manager.main()
         scores = Interface.mainBoard.getPointBoard()
         self.assertEqual(expPlayerScore, scores[tile_1])
         self.assertEqual(expComputerScore, scores[tile_2])

@@ -1,8 +1,6 @@
 import copy
 
-tile_1 = '#'
-tile_2 = '.'
-tile_hint = '?'
+from settings import Settings
 
 
 class ReversiException(Exception):
@@ -57,20 +55,20 @@ class Board:
                 self.board[x][y] = ' '
 
         # Starting pieces
-        self.board[3][3] = tile_1
-        self.board[3][4] = tile_2
-        self.board[4][3] = tile_2
-        self.board[4][4] = tile_1
+        self.board[3][3] = Settings.tile_1
+        self.board[3][4] = Settings.tile_2
+        self.board[4][3] = Settings.tile_2
+        self.board[4][4] = Settings.tile_1
 
     def check_valid_location(self, x, y):
         if self.board[x][y] != ' ' or not Location(x, y).is_on_board():
             raise InvalidLocationException()
 
     def get_tiles_to_flip_for_move(self, xstart, ystart, tile):
-        if tile == tile_1:
-            other_tile = tile_2
+        if tile == Settings.tile_1:
+            other_tile = Settings.tile_2
         else:
-            other_tile = tile_1
+            other_tile = Settings.tile_1
 
         start_loc = Location(xstart, ystart)
 
@@ -113,7 +111,7 @@ class Board:
         new_board_for_printing_only = self.getBoardCopy()
 
         for x, y in self.getValidMoves(tile):
-            new_board_for_printing_only.board[x][y] = tile_hint
+            new_board_for_printing_only.board[x][y] = Settings.tile_hint
 
         return new_board_for_printing_only
 
@@ -128,28 +126,28 @@ class Board:
         return validMoves
 
     def getScoreOfBoard(self):
-        # Determine the score by counting the tiles. Returns a dictionary with keys tile_1 and tile_2.
+        # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
         xscore = 0
         oscore = 0
         for x in range(8):
             for y in range(8):
-                if self.board[x][y] == tile_1:
+                if self.board[x][y] == Settings.tile_1:
                     xscore += 3
-                if self.board[x][y] == tile_2:
+                if self.board[x][y] == Settings.tile_2:
                     oscore += 3
-        return {tile_1:xscore, tile_2:oscore}
+        return {Settings.tile_1:xscore, Settings.tile_2:oscore}
 
     def getPointBoard(self):
-        # Determine the score by counting the tiles. Returns a dictionary with keys tile_1 and tile_2.
+        # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
         xscore = 0
         oscore = 0
         for x in range(8):
             for y in range(8):
-                if self.board[x][y] == tile_1:
+                if self.board[x][y] == Settings.tile_1:
                     xscore += 1
-                if self.board[x][y] == tile_2:
+                if self.board[x][y] == Settings.tile_2:
                     oscore += 1
-        return {tile_1:xscore, tile_2:oscore}
+        return {Settings.tile_1:xscore, Settings.tile_2:oscore}
 
     def makeMove(self, tile, xstart, ystart):
         # Place the tile on the board at xstart, ystart, and flip any of the opponent's pieces.
