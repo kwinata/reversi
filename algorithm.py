@@ -1,4 +1,4 @@
-from reversi import Board
+from data_structs import Board
 
 
 class Algorithm:

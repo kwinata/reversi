@@ -1,5 +1,5 @@
 from algorithm import Algorithm
-from reversi import Board
+from data_structs import Board
 from settings import Settings
 
 
