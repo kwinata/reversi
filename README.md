@@ -21,3 +21,8 @@ The evaluation here doesn't care with different situation of the game. We can im
 
 ## Bug
 This code has not gone for quite much testing. Should you encounter any bug, error, or suggestions, please kindly email to kevinwinatamichael@gmail.com with logs (if any).
+
+## Diagram
+
+### Component Diagram
+![reversi component diagram](https://github.com/kevinwinatamichael/reversi/blob/master/component_diagram.png "Component Diagram")
