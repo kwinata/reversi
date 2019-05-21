@@ -62,20 +62,10 @@ class Board:
         if self._board_array[x][y] != ' ' or not Location(x, y).is_on_board():
             raise InvalidLocationException()
 
-    def get_move_result(self, tile, xstart, ystart):
-        try:
-            self.check_valid_location(xstart, ystart)
-        except InvalidLocationException:
-            return False
 
-        tiles_to_flip = Rule.get_tiles_to_flip_for_move(self, xstart, ystart, tile)
-
-        if len(tiles_to_flip) == 0: # If no tiles were flipped, this is not a valid move.
-            return False
-        return tiles_to_flip
 
     def is_valid_move(self, tile, xstart, ystart):
-        if self.get_move_result(tile, xstart, ystart):
+        if Rule.get_move_result(self, tile, xstart, ystart):
             return True
         return False
 
@@ -124,7 +114,7 @@ class Board:
     def makeMove(self, tile, xstart, ystart):
         # Place the tile on the board at xstart, ystart, and flip any of the opponent's pieces.
         # Returns False if this is an invalid move, True if it is valid.
-        tiles_to_flip = self.get_move_result(tile, xstart, ystart)
+        tiles_to_flip = Rule.get_move_result(self, tile, xstart, ystart)
 
         if tiles_to_flip == False:
             return False
@@ -166,3 +156,15 @@ class Rule:
                     current_loc.offset(direction, reverse=True)
         return tiles_to_flip
 
+    @staticmethod
+    def get_move_result(board, tile, xstart, ystart):
+        try:
+            board.check_valid_location(xstart, ystart)
+        except InvalidLocationException:
+            return False
+
+        tiles_to_flip = Rule.get_tiles_to_flip_for_move(board, xstart, ystart, tile)
+
+        if len(tiles_to_flip) == 0:
+            return False
+        return tiles_to_flip
