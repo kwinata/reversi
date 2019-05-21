@@ -18,7 +18,7 @@ class Algorithm:
         # implementation of alphabeta pruning
 
 
-        possibleMoves = Rule.getValidMoves(board, tile)
+        possibleMoves = Rule.get_valid_moves(board, tile)
 
         # check for terminal node
         if depth == 0 or possibleMoves == []:

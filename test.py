@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+from exceptions import ExitException
 from rule import Rule
 from interface import Interface, MyInput
 from manager import Manager
@@ -13,8 +14,11 @@ class InterfaceTest(TestCase):
 
     def play(self, args, expPlayerScore, expComputerScore):
         MyInput.args = args
-        Manager.main()
-        scores = Rule.getPointBoard(Interface.mainBoard)
+        try:
+            Manager.main()
+        except ExitException:
+            pass
+        scores = Rule.getPointBoard(Manager.board)
         self.assertEqual(expPlayerScore, scores[tile_1])
         self.assertEqual(expComputerScore, scores[tile_2])
 

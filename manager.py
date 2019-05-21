@@ -5,75 +5,92 @@ from settings import Settings
 
 
 class Manager:
+    board = None
+    turn = None
+    show_hints = None
+    player_tile = None
+    computer_tile = None
 
+    @staticmethod
+    def initialize():
+        Manager.board = Board()
+        Manager.board.reset_board()
+
+    @staticmethod
+    def get_tiles_config():
+        Manager.player_tile, Manager.computer_tile = Interface.get_player_tile()
+        Manager.turn = Interface.get_first_turn()
+        Manager.show_hints = False
+
+    @staticmethod
+    def draw_board():
+        if Manager.show_hints:
+            Interface.draw_board(Rule.get_board_with_hints(Manager.board, Manager.player_tile))
+        else:
+            Interface.draw_board(Manager.board)
+
+    @staticmethod
+    def change_turn():
+        if Manager.turn == 'player':
+            Manager.turn = 'computer'
+        else:
+            Manager.turn = 'player'
+
+    @staticmethod
+    def switch_hints():
+        Manager.show_hints = not Manager.show_hints
+        
     @staticmethod
     def main():
         print('Welcome to Reversi!')
 
         while True:
-            # Reset the board and game.
-            mainBoard = Board()
-            mainBoard.reset_board()
-            Interface.mainBoard = mainBoard
-            playerTile, computerTile = Interface.enterPlayerTile()
-            showHints = False
-            turn = Interface.whoGoesFirst()
-            print('The ' + turn + ' will go first.')
+            Manager.initialize()
+            Manager.get_tiles_config()
 
             while True:
-                if turn == 'player':
-                    # Player's turn.
-                    if showHints:
-                        validMovesBoard = mainBoard.get_board_with_hints(playerTile)
-                        Interface.draw_board(validMovesBoard)
-                    else:
-                        Interface.draw_board(mainBoard)
-                    if Rule.getValidMoves(mainBoard, playerTile) == []:
+                if Manager.turn == 'player':
+                    Manager.draw_board()
+
+                    if not Rule.get_valid_moves(Manager.board, Manager.player_tile):
                         print("No valid moves\n")
                     else:
-                        Interface.show_points(playerTile, computerTile, mainBoard)
-                        move = Interface.getPlayerMove(mainBoard, playerTile)
-                        if move == 'quit':
-                            print('Thanks for playing!')
-                            # sys.exit()  # terminate the program
-                            return
-                        elif move == 'hints':
-                            showHints = not showHints
-                            continue
-                        else:
-                            Rule.makeMove(mainBoard, playerTile, move[0], move[1])
-                    turn = 'computer'
+                        move = Interface.getPlayerMove(Manager.board, Manager.player_tile)
+                        Rule.makeMove(Manager.board, Manager.player_tile, move[0], move[1])
+
+                    Interface.show_points(Manager.player_tile, Manager.computer_tile, Manager.board)
+                    Manager.change_turn()
 
                 else:
-                    # Computer's turn.
-                    Interface.draw_board(mainBoard)
-                    if Rule.getValidMoves(mainBoard, computerTile) == []:
-                        if Rule.getValidMoves(mainBoard, playerTile) == []:
+                    Manager.draw_board()
+
+                    if not Rule.get_valid_moves(Manager.board, Manager.computer_tile):
+                        if not Rule.get_valid_moves(Manager.board, Manager.player_tile):
                             print("Game ends: No move possible")
                             break
                         print("No valid move\n")
                     else:
-                        Interface.show_points(playerTile, computerTile, mainBoard)
                         print("I'm thinking...")
-                        x, y = Interface.getComputerMove(mainBoard, computerTile)
-                        Rule.makeMove(mainBoard, computerTile, x, y)
+                        x, y = Interface.getComputerMove(Manager.board, Manager.computer_tile)
+                        Rule.makeMove(Manager.board, Manager.computer_tile, x, y)
                         print("My move: ", x + 1, y + 1)
-                    turn = 'player'
+
+                    Interface.show_points(Manager.player_tile, Manager.computer_tile, Manager.board)
+                    Manager.change_turn()
+
 
             # Display the final score.
-            Interface.draw_board(mainBoard)
-            scores = Rule.getPointBoard(mainBoard)
+            Interface.draw_board(Manager.board)
+            scores = Rule.getPointBoard(Manager.board)
             print('%s scored %s points. %s scored %s points.' % (Settings.tile_1, scores[Settings.tile_1], Settings.tile_2, scores[Settings.tile_2]))
-            if scores[playerTile] > scores[computerTile]:
+            if scores[Manager.player_tile] > scores[Manager.computer_tile]:
                 print('You beat the computer by %s points! Congratulations!' % (
-                        scores[playerTile] - scores[computerTile]))
-            elif scores[playerTile] < scores[computerTile]:
-                print('You lost. The computer beat you by %s points.' % (scores[computerTile] - scores[playerTile]))
+                        scores[Manager.player_tile] - scores[Manager.computer_tile]))
+            elif scores[Manager.player_tile] < scores[Manager.computer_tile]:
+                print('You lost. The computer beat you by %s points.' % (scores[computer_tile] - scores[player_tile]))
             else:
                 print('The game was a tie!')
 
             if not Interface.playAgain():
 
                 break
-
-Manager.main()

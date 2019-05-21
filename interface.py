@@ -1,4 +1,5 @@
 from algorithm import Algorithm
+from exceptions import ExitException
 from rule import Rule
 from settings import Settings
 
@@ -32,23 +33,22 @@ class Interface:
         print()
 
     @staticmethod
-    def enterPlayerTile():
-        # Lets the player type which tile they want to be.
-        # Returns a list with the player's tile as the first item, and the computer's tile as the second.
+    def get_player_tile():
         tile = ''
         while not (tile == Settings.tile_1 or tile == Settings.tile_2):
             print('Do you want to be %s or %s?' % (Settings.tile_1, Settings.tile_2))
             tile = MyInput.getInput().upper()
 
-        # the first element in the tuple is the player's tile, the second is the computer's tile.
         if tile == Settings.tile_1:
             return [Settings.tile_1, Settings.tile_2]
         else:
             return [Settings.tile_2, Settings.tile_1]
 
     @staticmethod
-    def whoGoesFirst():
-        return 'player'
+    def get_first_turn():
+        turn = 'player'
+        print('The ' + turn + ' will go first.')
+        return turn
 
     @staticmethod
     def playAgain():
@@ -66,9 +66,10 @@ class Interface:
             print('Enter your move, or type quit to end the game, or hints to turn off/on hints.')
             move = MyInput.getInput().lower()
             if move == 'quit':
-                return 'quit'
+                raise ExitException
             if move == 'hints':
-                return 'hints'
+                # Manager.switch_hints()
+                return
 
             if len(move) == 2 and move[0] in DIGITS1TO8 and move[1] in DIGITS1TO8:
                 x = int(move[0]) - 1
@@ -88,7 +89,7 @@ class Interface:
         # Given a board and the computer's tile, determine where to
         # move and return that move as a [x, y] list.
 
-        possibleMoves = Rule.getValidMoves(board, computerTile)
+        possibleMoves = Rule.get_valid_moves(board, computerTile)
 
         # get the player tile (=oppTile)
         if(computerTile==Settings.tile_1):

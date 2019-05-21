@@ -48,16 +48,16 @@ class Rule:
         return False
 
     @staticmethod
-    def get_board_with_hints(self, tile):
-        new_board_for_printing_only = self.getBoardCopy()
+    def get_board_with_hints(board, tile):
+        new_board_for_printing_only = board.getBoardCopy()
 
-        for x, y in Rule.getValidMoves(self, tile):
+        for x, y in Rule.get_valid_moves(board, tile):
             new_board_for_printing_only.board[x][y] = Settings.tile_hint
 
         return new_board_for_printing_only
 
     @staticmethod
-    def getValidMoves(self, tile):
+    def get_valid_moves(self, tile):
         # Returns a list of [x,y] lists of valid moves for the given player on the given board.
         validMoves = []
 
@@ -81,15 +81,15 @@ class Rule:
         return {Settings.tile_1:xscore, Settings.tile_2:oscore}
 
     @staticmethod
-    def getPointBoard(self):
+    def getPointBoard(board):
         # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
         xscore = 0
         oscore = 0
         for x in range(8):
             for y in range(8):
-                if self._board_array[x][y] == Settings.tile_1:
+                if board._board_array[x][y] == Settings.tile_1:
                     xscore += 1
-                if self._board_array[x][y] == Settings.tile_2:
+                if board._board_array[x][y] == Settings.tile_2:
                     oscore += 1
         return {Settings.tile_1:xscore, Settings.tile_2:oscore}
 
