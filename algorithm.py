@@ -1,4 +1,4 @@
-from data_structs import Board, Rule
+from rule import Rule
 
 
 class Algorithm:

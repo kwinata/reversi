@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from data_structs import Rule
+from rule import Rule
 from interface import Interface, MyInput
 from manager import Manager
 

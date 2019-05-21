@@ -1,5 +1,5 @@
 from algorithm import Algorithm
-from data_structs import Board, Rule
+from rule import Rule
 from settings import Settings
 
 
