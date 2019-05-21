@@ -47,8 +47,6 @@ class Board:
             board_content.append([' '] * 8)
         self._board_array = board_content
 
-
-
     def reset_board(self):
         for x in range(8):
             for y in range(8):
@@ -64,15 +62,10 @@ class Board:
         if self._board_array[x][y] != ' ' or not Location(x, y).is_on_board():
             raise InvalidLocationException()
 
-
-
     def get_move_result(self, tile, xstart, ystart):
-        # Returns False if the player's move on space xstart, ystart is invalid.
-        # If it is a valid move, returns a list of spaces that would become the player's if they made a move here.
-
         try:
             self.check_valid_location(xstart, ystart)
-        except:
+        except InvalidLocationException:
             return False
 
         tiles_to_flip = Rule.get_tiles_to_flip_for_move(self, xstart, ystart, tile)
