@@ -25,7 +25,7 @@ class Interface:
         for y in range(8):
             print(y + 1, end=' ')
             for x in range(8):
-                print('| ' + board.board[x][y], end=' ')
+                print('| ' + board._board_array[x][y], end=' ')
             print('| ' + str(y + 1))
             print(horizontal_line)
         print('    1   2   3   4   5   6   7   8')

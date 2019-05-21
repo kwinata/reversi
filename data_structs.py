@@ -39,53 +39,32 @@ class Location:
 
 
 class Board:
-    board = None
+    _board_array = None
 
     def __init__(self):
         board_content = []
         for i in range(8):
             board_content.append([' '] * 8)
-        self.board = board_content
+        self._board_array = board_content
 
 
 
     def reset_board(self):
         for x in range(8):
             for y in range(8):
-                self.board[x][y] = ' '
+                self._board_array[x][y] = ' '
 
         # Starting pieces
-        self.board[3][3] = Settings.tile_1
-        self.board[3][4] = Settings.tile_2
-        self.board[4][3] = Settings.tile_2
-        self.board[4][4] = Settings.tile_1
+        self._board_array[3][3] = Settings.tile_1
+        self._board_array[3][4] = Settings.tile_2
+        self._board_array[4][3] = Settings.tile_2
+        self._board_array[4][4] = Settings.tile_1
 
     def check_valid_location(self, x, y):
-        if self.board[x][y] != ' ' or not Location(x, y).is_on_board():
+        if self._board_array[x][y] != ' ' or not Location(x, y).is_on_board():
             raise InvalidLocationException()
 
-    def get_tiles_to_flip_for_move(self, xstart, ystart, tile):
-        if tile == Settings.tile_1:
-            other_tile = Settings.tile_2
-        else:
-            other_tile = Settings.tile_1
 
-        start_loc = Location(xstart, ystart)
-
-        tiles_to_flip = []
-        for direction in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
-            current_loc = start_loc.copy()
-            current_loc.offset(direction)
-            while current_loc.is_on_board() and self.board[current_loc.x][current_loc.y] == other_tile:
-                current_loc.offset(direction)
-            if not current_loc.is_on_board():
-                continue
-            if self.board[current_loc.x][current_loc.y] == tile:
-                current_loc.offset(direction, reverse=True)
-                while current_loc != start_loc:
-                    tiles_to_flip.append([current_loc.x, current_loc.y])
-                    current_loc.offset(direction, reverse=True)
-        return tiles_to_flip
 
     def get_move_result(self, tile, xstart, ystart):
         # Returns False if the player's move on space xstart, ystart is invalid.
@@ -96,7 +75,7 @@ class Board:
         except:
             return False
 
-        tiles_to_flip = self.get_tiles_to_flip_for_move(xstart, ystart, tile)
+        tiles_to_flip = Rule.get_tiles_to_flip_for_move(self, xstart, ystart, tile)
 
         if len(tiles_to_flip) == 0: # If no tiles were flipped, this is not a valid move.
             return False
@@ -131,9 +110,9 @@ class Board:
         oscore = 0
         for x in range(8):
             for y in range(8):
-                if self.board[x][y] == Settings.tile_1:
+                if self._board_array[x][y] == Settings.tile_1:
                     xscore += 3
-                if self.board[x][y] == Settings.tile_2:
+                if self._board_array[x][y] == Settings.tile_2:
                     oscore += 3
         return {Settings.tile_1:xscore, Settings.tile_2:oscore}
 
@@ -143,9 +122,9 @@ class Board:
         oscore = 0
         for x in range(8):
             for y in range(8):
-                if self.board[x][y] == Settings.tile_1:
+                if self._board_array[x][y] == Settings.tile_1:
                     xscore += 1
-                if self.board[x][y] == Settings.tile_2:
+                if self._board_array[x][y] == Settings.tile_2:
                     oscore += 1
         return {Settings.tile_1:xscore, Settings.tile_2:oscore}
 
@@ -157,16 +136,40 @@ class Board:
         if tiles_to_flip == False:
             return False
 
-        self.board[xstart][ystart] = tile
+        self._board_array[xstart][ystart] = tile
         for x, y in tiles_to_flip:
-            self.board[x][y] = tile
+            self._board_array[x][y] = tile
         return True
 
     def getBoardCopy(self):
         # Make a duplicate of the board list and return the duplicate.
         board = Board()
-        board.board = copy.deepcopy(self.board)
+        board._board_array = copy.deepcopy(self._board_array)
         return board
 
 
+class Rule:
+    @staticmethod
+    def get_tiles_to_flip_for_move(board, xstart, ystart, tile):
+        if tile == Settings.tile_1:
+            other_tile = Settings.tile_2
+        else:
+            other_tile = Settings.tile_1
+
+        start_loc = Location(xstart, ystart)
+
+        tiles_to_flip = []
+        for direction in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
+            current_loc = start_loc.copy()
+            current_loc.offset(direction)
+            while current_loc.is_on_board() and board._board_array[current_loc.x][current_loc.y] == other_tile:
+                current_loc.offset(direction)
+            if not current_loc.is_on_board():
+                continue
+            if board._board_array[current_loc.x][current_loc.y] == tile:
+                current_loc.offset(direction, reverse=True)
+                while current_loc != start_loc:
+                    tiles_to_flip.append([current_loc.x, current_loc.y])
+                    current_loc.offset(direction, reverse=True)
+        return tiles_to_flip
 
