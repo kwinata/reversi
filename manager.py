@@ -1,5 +1,6 @@
+from data_structs import Board
 from interface import Interface
-from rule import Board, Rule
+from rule import Rule
 from settings import Settings
 
 
