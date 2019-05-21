@@ -62,68 +62,6 @@ class Board:
         if self._board_array[x][y] != ' ' or not Location(x, y).is_on_board():
             raise InvalidLocationException()
 
-
-
-    def is_valid_move(self, tile, xstart, ystart):
-        if Rule.get_move_result(self, tile, xstart, ystart):
-            return True
-        return False
-
-    def get_board_with_hints(self, tile):
-        new_board_for_printing_only = self.getBoardCopy()
-
-        for x, y in self.getValidMoves(tile):
-            new_board_for_printing_only.board[x][y] = Settings.tile_hint
-
-        return new_board_for_printing_only
-
-    def getValidMoves(self, tile):
-        # Returns a list of [x,y] lists of valid moves for the given player on the given board.
-        validMoves = []
-
-        for x in range(8):
-            for y in range(8):
-                if self.is_valid_move(tile, x, y) != False:
-                    validMoves.append([x, y])
-        return validMoves
-
-    def getScoreOfBoard(self):
-        # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
-        xscore = 0
-        oscore = 0
-        for x in range(8):
-            for y in range(8):
-                if self._board_array[x][y] == Settings.tile_1:
-                    xscore += 3
-                if self._board_array[x][y] == Settings.tile_2:
-                    oscore += 3
-        return {Settings.tile_1:xscore, Settings.tile_2:oscore}
-
-    def getPointBoard(self):
-        # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
-        xscore = 0
-        oscore = 0
-        for x in range(8):
-            for y in range(8):
-                if self._board_array[x][y] == Settings.tile_1:
-                    xscore += 1
-                if self._board_array[x][y] == Settings.tile_2:
-                    oscore += 1
-        return {Settings.tile_1:xscore, Settings.tile_2:oscore}
-
-    def makeMove(self, tile, xstart, ystart):
-        # Place the tile on the board at xstart, ystart, and flip any of the opponent's pieces.
-        # Returns False if this is an invalid move, True if it is valid.
-        tiles_to_flip = Rule.get_move_result(self, tile, xstart, ystart)
-
-        if tiles_to_flip == False:
-            return False
-
-        self._board_array[xstart][ystart] = tile
-        for x, y in tiles_to_flip:
-            self._board_array[x][y] = tile
-        return True
-
     def getBoardCopy(self):
         # Make a duplicate of the board list and return the duplicate.
         board = Board()
@@ -168,3 +106,69 @@ class Rule:
         if len(tiles_to_flip) == 0:
             return False
         return tiles_to_flip
+
+    @staticmethod
+    def is_valid_move(self, tile, xstart, ystart):
+        if Rule.get_move_result(self, tile, xstart, ystart):
+            return True
+        return False
+
+    @staticmethod
+    def get_board_with_hints(self, tile):
+        new_board_for_printing_only = self.getBoardCopy()
+
+        for x, y in Rule.getValidMoves(self, tile):
+            new_board_for_printing_only.board[x][y] = Settings.tile_hint
+
+        return new_board_for_printing_only
+
+    @staticmethod
+    def getValidMoves(self, tile):
+        # Returns a list of [x,y] lists of valid moves for the given player on the given board.
+        validMoves = []
+
+        for x in range(8):
+            for y in range(8):
+                if Rule.is_valid_move(self, tile, x, y) != False:
+                    validMoves.append([x, y])
+        return validMoves
+
+    @staticmethod
+    def getScoreOfBoard(self):
+        # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
+        xscore = 0
+        oscore = 0
+        for x in range(8):
+            for y in range(8):
+                if self._board_array[x][y] == Settings.tile_1:
+                    xscore += 3
+                if self._board_array[x][y] == Settings.tile_2:
+                    oscore += 3
+        return {Settings.tile_1:xscore, Settings.tile_2:oscore}
+
+    @staticmethod
+    def getPointBoard(self):
+        # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
+        xscore = 0
+        oscore = 0
+        for x in range(8):
+            for y in range(8):
+                if self._board_array[x][y] == Settings.tile_1:
+                    xscore += 1
+                if self._board_array[x][y] == Settings.tile_2:
+                    oscore += 1
+        return {Settings.tile_1:xscore, Settings.tile_2:oscore}
+
+    @staticmethod
+    def makeMove(self, tile, xstart, ystart):
+        # Place the tile on the board at xstart, ystart, and flip any of the opponent's pieces.
+        # Returns False if this is an invalid move, True if it is valid.
+        tiles_to_flip = Rule.get_move_result(self, tile, xstart, ystart)
+
+        if tiles_to_flip == False:
+            return False
+
+        self._board_array[xstart][ystart] = tile
+        for x, y in tiles_to_flip:
+            self._board_array[x][y] = tile
+        return True

@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+from data_structs import Rule
 from interface import Interface, MyInput
 from manager import Manager
 
@@ -13,7 +14,7 @@ class InterfaceTest(TestCase):
     def play(self, args, expPlayerScore, expComputerScore):
         MyInput.args = args
         Manager.main()
-        scores = Interface.mainBoard.getPointBoard()
+        scores = Rule.getPointBoard(Interface.mainBoard)
         self.assertEqual(expPlayerScore, scores[tile_1])
         self.assertEqual(expComputerScore, scores[tile_2])
 

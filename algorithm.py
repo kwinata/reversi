@@ -1,4 +1,4 @@
-from data_structs import Board
+from data_structs import Board, Rule
 
 
 class Algorithm:
@@ -18,11 +18,11 @@ class Algorithm:
         # implementation of alphabeta pruning
 
 
-        possibleMoves = board.getValidMoves(tile)
+        possibleMoves = Rule.getValidMoves(board, tile)
 
         # check for terminal node
         if depth == 0 or possibleMoves == []:
-            return board.getScoreOfBoard()[computerTile]
+            return Rule.getScoreOfBoard(board)[computerTile]
 
         # get the player tile
         oppTile = "X"
@@ -37,7 +37,7 @@ class Algorithm:
 
                 # get the alphabeta of child
                 child = board.getBoardCopy()
-                Board.makeMove(child, tile, x, y)
+                Rule.makeMove(child, tile, x, y)
                 v = Algorithm.alphabeta(child, depth-1, alpha, beta, computerTile, oppTile)
                 v += Algorithm.scoretable[x][y]
 
@@ -53,7 +53,7 @@ class Algorithm:
 
                 # get the alphabeta of child
                 child = board.getBoardCopy()
-                Board.makeMove(child, tile, x, y)
+                Rule.makeMove(child, tile, x, y)
                 v = Algorithm.alphabeta(child, depth-1, alpha, beta, computerTile, oppTile)
                 v -= Algorithm.scoretable[x][y]
 

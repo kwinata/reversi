@@ -1,5 +1,5 @@
 from algorithm import Algorithm
-from data_structs import Board
+from data_structs import Board, Rule
 from settings import Settings
 
 
@@ -73,7 +73,7 @@ class Interface:
             if len(move) == 2 and move[0] in DIGITS1TO8 and move[1] in DIGITS1TO8:
                 x = int(move[0]) - 1
                 y = int(move[1]) - 1
-                if board.is_valid_move(playerTile, x, y) == False:
+                if Rule.is_valid_move(board, playerTile, x, y) == False:
                     continue
                 else:
                     break
@@ -88,7 +88,7 @@ class Interface:
         # Given a board and the computer's tile, determine where to
         # move and return that move as a [x, y] list.
 
-        possibleMoves = board.getValidMoves(computerTile)
+        possibleMoves = Rule.getValidMoves(board, computerTile)
 
         # get the player tile (=oppTile)
         if(computerTile==Settings.tile_1):
@@ -120,7 +120,7 @@ class Interface:
     @staticmethod
     def show_points(playerTile, computerTile, mainBoard):
         # Prints out the current score.
-        scores = mainBoard.getPointBoard()
+        scores = Rule.getPointBoard(mainBoard)
         print('You have %s points. The computer has %s points.' % (scores[playerTile], scores[computerTile]))
 
 

@@ -1,5 +1,5 @@
 from interface import Interface
-from data_structs import Board
+from data_structs import Board, Rule
 from settings import Settings
 
 
@@ -27,7 +27,7 @@ class Manager:
                         Interface.draw_board(validMovesBoard)
                     else:
                         Interface.draw_board(mainBoard)
-                    if mainBoard.getValidMoves(playerTile) == []:
+                    if Rule.getValidMoves(mainBoard, playerTile) == []:
                         print("No valid moves\n")
                     else:
                         Interface.show_points(playerTile, computerTile, mainBoard)
@@ -40,14 +40,14 @@ class Manager:
                             showHints = not showHints
                             continue
                         else:
-                            mainBoard.makeMove(playerTile, move[0], move[1])
+                            Rule.makeMove(mainBoard, playerTile, move[0], move[1])
                     turn = 'computer'
 
                 else:
                     # Computer's turn.
                     Interface.draw_board(mainBoard)
-                    if mainBoard.getValidMoves(computerTile) == []:
-                        if mainBoard.getValidMoves(playerTile) == []:
+                    if Rule.getValidMoves(mainBoard, computerTile) == []:
+                        if Rule.getValidMoves(mainBoard, playerTile) == []:
                             print("Game ends: No move possible")
                             break
                         print("No valid move\n")
@@ -55,13 +55,13 @@ class Manager:
                         Interface.show_points(playerTile, computerTile, mainBoard)
                         print("I'm thinking...")
                         x, y = Interface.getComputerMove(mainBoard, computerTile)
-                        mainBoard.makeMove(computerTile, x, y)
+                        Rule.makeMove(mainBoard, computerTile, x, y)
                         print("My move: ", x + 1, y + 1)
                     turn = 'player'
 
             # Display the final score.
             Interface.draw_board(mainBoard)
-            scores = mainBoard.getPointBoard()
+            scores = Rule.getPointBoard(mainBoard)
             print('%s scored %s points. %s scored %s points.' % (Settings.tile_1, scores[Settings.tile_1], Settings.tile_2, scores[Settings.tile_2]))
             if scores[playerTile] > scores[computerTile]:
                 print('You beat the computer by %s points! Congratulations!' % (
