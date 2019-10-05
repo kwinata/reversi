@@ -1,11 +1,13 @@
 from data_structs import Position, Vector
-from exceptions import InvalidLocationException
 from settings import Settings
 
 
 class Rule:
     @staticmethod
-    def get_tiles_to_flip_for_move(board, xstart, ystart, tile):
+    def get_tiles_to_flip_for_move(board, position, tile):
+        xstart = position.coordinates[0]
+        ystart = position.coordinates[1]
+
         if tile == Settings.tile_1:
             other_tile = Settings.tile_2
         else:
@@ -35,7 +37,8 @@ class Rule:
         if not board.is_empty_and_on_board(Position(xstart, ystart)):
             return False
 
-        tiles_to_flip = Rule.get_tiles_to_flip_for_move(board, xstart, ystart, tile)
+        position = Position(xstart, ystart)
+        tiles_to_flip = Rule.get_tiles_to_flip_for_move(board, position, tile)
 
         if len(tiles_to_flip) == 0:
             return False
