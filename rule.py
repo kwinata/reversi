@@ -7,7 +7,7 @@ from settings import Settings
 
 class Rule:
     @staticmethod
-    def get_tiles_to_flip_for_move(board: Board, start_loc: Position, tile: Any):
+    def get_tiles_to_flip_for_move(board: Board, start_loc: Position, tile: Any) -> List[Position]:
         if tile == Settings.tile_1:
             other_tile = Settings.tile_2
         else:
@@ -32,12 +32,12 @@ class Rule:
             if board.get_value(current_loc) == tile:
                 current_loc.offset(direction, reverse=True)
                 while current_loc != start_loc:
-                    tiles_to_flip.append(current_loc.coordinates)
+                    tiles_to_flip.append(current_loc.copy())
                     current_loc.offset(direction, reverse=True)
         return tiles_to_flip
 
     @staticmethod
-    def get_move_result(board: Board, tile: Any, position: Position) -> List[List[int]]:
+    def get_move_result(board: Board, tile: Any, position: Position) -> List[Position]:
         if not board.is_empty_and_on_board(position):
             return []
 
@@ -105,10 +105,10 @@ class Rule:
         # Returns False if this is an invalid move, True if it is valid.
         tiles_to_flip = Rule.get_move_result(board, tile, position)
 
-        if tiles_to_flip == False:
+        if len(tiles_to_flip) == 0:
             return False
 
         board.set_value(position, tile)
-        for x, y in tiles_to_flip:
-            board.set_value(Position(x, y), tile)
+        for position in tiles_to_flip:
+            board.set_value(position, tile)
         return True
