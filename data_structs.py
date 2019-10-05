@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import copy
 
-from typing import List
-
 from settings import Settings
 
 
@@ -30,13 +28,6 @@ class Vector:
 
 
 class Position(Vector):
-    """
-    A pointer to a cell on board
-
-    Args:
-        x : x axis value (valid from 0 to 7)
-        y : y axis value (valid from 0 to 7)
-    """
     def is_on_board(self) -> bool:
         return 0 <= self.get_coordinate(0) <= 7 and 0 <= self.get_coordinate(1) <= 7
 
