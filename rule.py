@@ -38,13 +38,9 @@ class Rule:
 
     @staticmethod
     def get_move_result(board: Board, tile: Any, position: Position) -> List[List[int]]:
-        xstart = position.coordinates[0]
-        ystart = position.coordinates[1]
-
-        if not board.is_empty_and_on_board(Position(xstart, ystart)):
+        if not board.is_empty_and_on_board(position):
             return []
 
-        position = Position(xstart, ystart)
         tiles_to_flip = Rule.get_tiles_to_flip_for_move(board, position, tile)
 
         if len(tiles_to_flip) == 0:
