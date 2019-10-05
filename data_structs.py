@@ -20,13 +20,13 @@ class Vector:
     def __str__(self) -> str:
         return "({})".format(", ".join([str(i) for i in self.coordinates]))
 
-    def offset(self, direction: List[int], reverse: bool = False) -> None:
-        if len(self.coordinates) != len(direction):
-            raise ValueError("Different length of vector and direction")
+    def offset(self, other: Vector, reverse: bool = False) -> None:
+        if len(self.coordinates) != len(other.coordinates):
+            raise ValueError("Different length of dimension {} {}".format(self.coordinates, other.coordinates))
         if reverse:
-            self.coordinates = [a + b for a, b in zip(self.coordinates, direction)]
+            self.coordinates = [a + b for a, b in zip(self.coordinates, other.coordinates)]
         else:
-            self.coordinates = [a - b for a, b in zip(self.coordinates, direction)]
+            self.coordinates = [a - b for a, b in zip(self.coordinates, other.coordinates)]
 
 
 class Position(Vector):

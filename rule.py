@@ -1,4 +1,4 @@
-from data_structs import Position
+from data_structs import Position, Vector
 from exceptions import InvalidLocationException
 from settings import Settings
 
@@ -15,6 +15,8 @@ class Rule:
 
         tiles_to_flip = []
         for direction in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
+            direction = Vector(*direction)
+
             current_loc = start_loc.copy()
             current_loc.offset(direction)
             while current_loc.is_on_board() and board._board_array[current_loc.get_coordinate(0)][current_loc.get_coordinate(1)] == other_tile:
