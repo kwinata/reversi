@@ -7,7 +7,7 @@ from settings import Settings
 
 class Vector:
     def __init__(self, *coordinates) -> None:
-        if len(coordinates) != Settings.dimension:
+        if len(coordinates) != len(Settings.dimensions):
             raise ValueError("Wrong coordinates dimension length")
         self.coordinates = list(coordinates)
 
@@ -29,8 +29,8 @@ class Vector:
 
 class Position(Vector):
     def is_on_board(self) -> bool:
-        for i in range(Settings.dimension):
-            if not(0 <= self.get_coordinate(i) <= Settings.length - 1):
+        for i, dim in enumerate(Settings.dimensions):
+            if not(0 <= self.get_coordinate(i) <= dim - 1):
                 return False
         return True
 

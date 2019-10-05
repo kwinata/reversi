@@ -3,5 +3,8 @@ class Settings:
     tile_2 = '.'
     empty_tile = ' '
     tile_hint = '?'
-    dimension = 2
-    length = 8
+    dimensions = [8, 8]
+
+for dim in Settings.dimensions:
+    if dim < 2:
+        raise ValueError("Minimal dimension is 2, if not it is either not useful or does not make sense")
