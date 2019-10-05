@@ -1,3 +1,5 @@
+import itertools
+
 from data_structs import Position, Vector
 from settings import Settings
 
@@ -5,20 +7,23 @@ from settings import Settings
 class Rule:
     @staticmethod
     def get_tiles_to_flip_for_move(board, position, tile):
-        xstart = position.coordinates[0]
-        ystart = position.coordinates[1]
-
         if tile == Settings.tile_1:
             other_tile = Settings.tile_2
         else:
             other_tile = Settings.tile_1
 
-        start_loc = Position(xstart, ystart)
+        start_loc = position
 
         tiles_to_flip = []
-        for direction in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
-            direction = Vector(*direction)
 
+        itertools_input = []
+        for i in range(len(Settings.dimensions)):
+            itertools_input.append([-1, 0, 1])
+        directions = [Vector(*coordinate) for coordinate in itertools.product(*itertools_input)]
+        all_zero = Vector(*[0 for i in Settings.dimensions])
+        directions.remove(all_zero)
+
+        for direction in directions:
             current_loc = start_loc.copy()
             current_loc.offset(direction)
             while current_loc.is_on_board() and board._board_array[current_loc.get_coordinate(0)][current_loc.get_coordinate(1)] == other_tile:
