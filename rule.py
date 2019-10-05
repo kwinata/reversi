@@ -72,7 +72,7 @@ class Rule:
         return valid_moves
 
     @staticmethod
-    def get_score_of_board(board: Board) -> Dict[str: int]:
+    def get_score_of_board(board: Board) -> Dict[str, int]:
         # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
         xscore = 0
         oscore = 0
