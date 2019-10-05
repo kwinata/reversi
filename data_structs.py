@@ -7,19 +7,12 @@ from typing import Tuple
 from settings import Settings
 
 
-class Location:
-    """
-    A pointer to a cell on board
-
-    Args:
-        x : x axis value (valid from 0 to 7)
-        y : y axis value (valid from 0 to 7)
-    """
+class Vector:
     def __init__(self, x: int, y: int) -> None:
         self.x = x
         self.y = y
 
-    def __eq__(self, other: Location) -> bool:
+    def __eq__(self, other: Vector) -> bool:
         return self.x == other.x and self.y == other.y
 
     def __str__(self) -> str:
@@ -33,11 +26,20 @@ class Location:
             self.x += direction[0]
             self.y += direction[1]
 
-    def copy(self) -> Location:
-        return Location(self.x, self.y)
 
+class Location(Vector):
+    """
+    A pointer to a cell on board
+
+    Args:
+        x : x axis value (valid from 0 to 7)
+        y : y axis value (valid from 0 to 7)
+    """
     def is_on_board(self) -> bool:
         return 0 <= self.x <= 7 and 0 <= self.y <= 7
+
+    def copy(self) -> Location:
+        return Location(self.x, self.y)
 
 
 class Board:
