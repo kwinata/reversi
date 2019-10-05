@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import copy
+import itertools
+
+from typing import List
 
 from settings import Settings
 
@@ -45,7 +48,7 @@ class Board:
     _board_array = None
 
     def __init__(self):
-        board_content = ' '
+        board_content = Settings.empty_tile
         for dim in Settings.dimensions:
             next_dimension = []
             for i in range(dim):
@@ -53,19 +56,25 @@ class Board:
             board_content = next_dimension
         self._board_array = board_content
 
+    def set_value(self, coordinate: List[int], value):
+        elements = self._board_array
+        for i in coordinate[:-1]:
+            elements = elements[i]
+        elements[coordinate[-1]] = value
+
     def reset_board(self):
         """
         Reset the board to the starting position of reversi board.
         """
-        for x in range(8):
-            for y in range(8):
-                self._board_array[x][y] = ' '
-
-        # Starting pieces
-        self._board_array[3][3] = Settings.tile_1
-        self._board_array[3][4] = Settings.tile_2
-        self._board_array[4][3] = Settings.tile_2
-        self._board_array[4][4] = Settings.tile_1
+        self._board_array = Board()._board_array
+        coordinates = []
+        for dim in Settings.dimensions:
+            coordinates.append([dim//2-1, dim//2])  # choose the mid 2 coordinate
+        for coordinate in itertools.product(*coordinates):
+            if sum(coordinate) % 2:  # alternate choosing
+                self.set_value(coordinate, Settings.tile_2)
+            else:
+                self.set_value(coordinate, Settings.tile_1)
 
     def is_empty_and_on_board(self, location: Position) -> bool:
         """
