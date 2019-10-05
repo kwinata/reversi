@@ -64,6 +64,12 @@ class Board:
             elements = elements[i]
         elements[position.coordinates[-1]] = value
 
+    def get_value(self, position: Position):
+        elements = self._board_array
+        for i in position.coordinates:
+            elements = elements[i]
+        return elements
+
     def reset_board(self):
         """
         Reset the board to the starting position of reversi board.
@@ -78,15 +84,15 @@ class Board:
             else:
                 self.set_value(position, Settings.tile_1)
 
-    def is_empty_and_on_board(self, location: Position) -> bool:
+    def is_empty_and_on_board(self, position: Position) -> bool:
         """
         Checks whether the board is empty at the ``location`` and
         still inside the board
 
         Args:
-            location : the ``Position`` object to be checked
+            position : the ``Position`` object to be checked
         """
-        return location.is_on_board() and self._board_array[location.get_coordinate(0)][location.get_coordinate(1)] == Settings.empty_tile
+        return position.is_on_board() and self.get_value(position) == Settings.empty_tile
 
     def duplicate_board(self) -> Board:
         """
