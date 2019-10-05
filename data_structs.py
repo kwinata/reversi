@@ -56,11 +56,11 @@ class Board:
             board_content = next_dimension
         self._board_array = board_content
 
-    def set_value(self, coordinate: List[int], value):
+    def set_value(self, position: Position, value):
         elements = self._board_array
-        for i in coordinate[:-1]:
+        for i in position.coordinates[:-1]:
             elements = elements[i]
-        elements[coordinate[-1]] = value
+        elements[position.coordinates[-1]] = value
 
     def reset_board(self):
         """
@@ -70,11 +70,11 @@ class Board:
         coordinates = []
         for dim in Settings.dimensions:
             coordinates.append([dim//2-1, dim//2])  # choose the mid 2 coordinate
-        for coordinate in itertools.product(*coordinates):
-            if sum(coordinate) % 2:  # alternate choosing
-                self.set_value(coordinate, Settings.tile_2)
+        for position in [Position(*coordinate) for coordinate in itertools.product(*coordinates)]:
+            if sum(position.coordinates) % 2:  # alternate choosing
+                self.set_value(position, Settings.tile_2)
             else:
-                self.set_value(coordinate, Settings.tile_1)
+                self.set_value(position, Settings.tile_1)
 
     def is_empty_and_on_board(self, location: Position) -> bool:
         """
