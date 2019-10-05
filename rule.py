@@ -100,15 +100,15 @@ class Rule:
         return {Settings.tile_1:xscore, Settings.tile_2:oscore}
 
     @staticmethod
-    def makeMove(self, tile, xstart, ystart):
+    def makeMove(board, tile, position):
         # Place the tile on the board at xstart, ystart, and flip any of the opponent's pieces.
         # Returns False if this is an invalid move, True if it is valid.
-        tiles_to_flip = Rule.get_move_result(self, tile, Position(xstart, ystart))
+        tiles_to_flip = Rule.get_move_result(board, tile, position)
 
         if tiles_to_flip == False:
             return False
 
-        self._board_array[xstart][ystart] = tile
+        board.set_value(position, tile)
         for x, y in tiles_to_flip:
-            self._board_array[x][y] = tile
+            board.set_value(Position(x, y), tile)
         return True

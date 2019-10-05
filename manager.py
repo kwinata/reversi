@@ -1,4 +1,4 @@
-from data_structs import Board
+from data_structs import Board, Position
 from interface import Interface
 from rule import Rule
 from settings import Settings
@@ -56,7 +56,7 @@ class Manager:
                         print("No valid moves\n")
                     else:
                         move = Interface.getPlayerMove(Manager.board, Manager.player_tile)
-                        Rule.makeMove(Manager.board, Manager.player_tile, move[0], move[1])
+                        Rule.makeMove(Manager.board, Manager.player_tile, Position(move[0], move[1]))
 
                     Interface.show_points(Manager.player_tile, Manager.computer_tile, Manager.board)
                     Manager.change_turn()
@@ -72,7 +72,7 @@ class Manager:
                     else:
                         print("I'm thinking...")
                         x, y = Interface.getComputerMove(Manager.board, Manager.computer_tile)
-                        Rule.makeMove(Manager.board, Manager.computer_tile, x, y)
+                        Rule.makeMove(Manager.board, Manager.computer_tile, Position(x, y))
                         print("My move: ", x + 1, y + 1)
 
                     Interface.show_points(Manager.player_tile, Manager.computer_tile, Manager.board)

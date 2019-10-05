@@ -1,3 +1,4 @@
+from data_structs import Position
 from rule import Rule
 
 
@@ -37,7 +38,7 @@ class Algorithm:
 
                 # get the alphabeta of child
                 child = board.duplicate_board()
-                Rule.makeMove(child, tile, x, y)
+                Rule.makeMove(child, tile, Position(x, y))
                 v = Algorithm.alphabeta(child, depth-1, alpha, beta, computerTile, oppTile)
                 v += Algorithm.scoretable[x][y]
 
@@ -53,7 +54,7 @@ class Algorithm:
 
                 # get the alphabeta of child
                 child = board.duplicate_board()
-                Rule.makeMove(child, tile, x, y)
+                Rule.makeMove(child, tile, Position(x, y))
                 v = Algorithm.alphabeta(child, depth-1, alpha, beta, computerTile, oppTile)
                 v -= Algorithm.scoretable[x][y]
 
