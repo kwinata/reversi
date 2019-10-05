@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 
 from exceptions import ExitException
@@ -26,3 +27,7 @@ class InterfaceTest(TestCase):
         self.play([tile_1, "53", "64", "33", "quit"], 4, 6)
         self.play([tile_1, "35", "37", "88", "63", "27", "18", "quit"], 6, 8)
         self.play(["53", tile_1, "53", "cat", "quit"], 3, 3)
+
+
+if __name__ == "__main__":
+     unittest.main()

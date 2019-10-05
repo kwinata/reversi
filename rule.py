@@ -30,9 +30,7 @@ class Rule:
 
     @staticmethod
     def get_move_result(board, tile, xstart, ystart):
-        try:
-            board.check_valid_location(xstart, ystart)
-        except InvalidLocationException:
+        if not board.is_empty_and_on_board(Location(xstart, ystart)):
             return False
 
         tiles_to_flip = Rule.get_tiles_to_flip_for_move(board, xstart, ystart, tile)
@@ -49,7 +47,7 @@ class Rule:
 
     @staticmethod
     def get_board_with_hints(board, tile):
-        new_board_for_printing_only = board.getBoardCopy()
+        new_board_for_printing_only = board.duplicate_board()
 
         for x, y in Rule.get_valid_moves(board, tile):
             new_board_for_printing_only.board[x][y] = Settings.tile_hint

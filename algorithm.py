@@ -36,7 +36,7 @@ class Algorithm:
             for x, y in possibleMoves:
 
                 # get the alphabeta of child
-                child = board.getBoardCopy()
+                child = board.duplicate_board()
                 Rule.makeMove(child, tile, x, y)
                 v = Algorithm.alphabeta(child, depth-1, alpha, beta, computerTile, oppTile)
                 v += Algorithm.scoretable[x][y]
@@ -52,7 +52,7 @@ class Algorithm:
             for x, y in possibleMoves:
 
                 # get the alphabeta of child
-                child = board.getBoardCopy()
+                child = board.duplicate_board()
                 Rule.makeMove(child, tile, x, y)
                 v = Algorithm.alphabeta(child, depth-1, alpha, beta, computerTile, oppTile)
                 v -= Algorithm.scoretable[x][y]
