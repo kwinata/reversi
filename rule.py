@@ -64,14 +64,12 @@ class Rule:
 
     @staticmethod
     def get_valid_moves(self, tile):
-        # Returns a list of [x,y] lists of valid moves for the given player on the given board.
-        validMoves = []
-
-        for x in range(8):
-            for y in range(8):
-                if Rule.is_valid_move(self, tile, Position(x, y)) != False:
-                    validMoves.append([x, y])
-        return validMoves
+        valid_moves = []
+        cells_to_try = itertools.product(*[range(i) for i in Settings.dimensions])
+        for cell in cells_to_try:
+            if Rule.is_valid_move(self, tile, Position(*cell)):
+                valid_moves.append(cell)
+        return valid_moves
 
     @staticmethod
     def getScoreOfBoard(self):
