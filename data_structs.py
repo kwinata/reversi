@@ -57,6 +57,8 @@ class Board:
         self._board_array = board_content
 
     def set_value(self, position: Position, value):
+        if not position.is_on_board():
+            raise ValueError("position is not in board")
         elements = self._board_array
         for i in position.coordinates[:-1]:
             elements = elements[i]
