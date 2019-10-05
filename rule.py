@@ -1,5 +1,5 @@
 import itertools
-from typing import Any
+from typing import Any, List
 
 from data_structs import Position, Vector, Board
 from settings import Settings
@@ -37,20 +37,23 @@ class Rule:
         return tiles_to_flip
 
     @staticmethod
-    def get_move_result(board, tile, xstart, ystart):
+    def get_move_result(board: Board, tile: Any, position: Position) -> List[List[int]]:
+        xstart = position.coordinates[0]
+        ystart = position.coordinates[1]
+
         if not board.is_empty_and_on_board(Position(xstart, ystart)):
-            return False
+            return []
 
         position = Position(xstart, ystart)
         tiles_to_flip = Rule.get_tiles_to_flip_for_move(board, position, tile)
 
         if len(tiles_to_flip) == 0:
-            return False
+            return []
         return tiles_to_flip
 
     @staticmethod
     def is_valid_move(self, tile, xstart, ystart):
-        if Rule.get_move_result(self, tile, xstart, ystart):
+        if Rule.get_move_result(self, tile, Position(xstart, ystart)):
             return True
         return False
 
@@ -104,7 +107,7 @@ class Rule:
     def makeMove(self, tile, xstart, ystart):
         # Place the tile on the board at xstart, ystart, and flip any of the opponent's pieces.
         # Returns False if this is an invalid move, True if it is valid.
-        tiles_to_flip = Rule.get_move_result(self, tile, xstart, ystart)
+        tiles_to_flip = Rule.get_move_result(self, tile, Position(xstart, ystart))
 
         if tiles_to_flip == False:
             return False
