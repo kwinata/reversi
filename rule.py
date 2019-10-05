@@ -17,14 +17,14 @@ class Rule:
         for direction in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
             current_loc = start_loc.copy()
             current_loc.offset(direction)
-            while current_loc.is_on_board() and board._board_array[current_loc.x][current_loc.y] == other_tile:
+            while current_loc.is_on_board() and board._board_array[current_loc.get_x()][current_loc.get_y()] == other_tile:
                 current_loc.offset(direction)
             if not current_loc.is_on_board():
                 continue
-            if board._board_array[current_loc.x][current_loc.y] == tile:
+            if board._board_array[current_loc.get_x()][current_loc.get_y()] == tile:
                 current_loc.offset(direction, reverse=True)
                 while current_loc != start_loc:
-                    tiles_to_flip.append([current_loc.x, current_loc.y])
+                    tiles_to_flip.append([current_loc.get_x(), current_loc.get_y()])
                     current_loc.offset(direction, reverse=True)
         return tiles_to_flip
 

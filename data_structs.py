@@ -9,22 +9,34 @@ from settings import Settings
 
 class Vector:
     def __init__(self, x: int, y: int) -> None:
-        self.x = x
-        self.y = y
+        self._x = x
+        self._y = y
+
+    def get_x(self):
+        return self._x
+
+    def get_y(self):
+        return self._y
+
+    def set_x(self, x):
+        self._x = x
+
+    def set_y(self, y):
+        self._y = y
 
     def __eq__(self, other: Vector) -> bool:
-        return self.x == other.x and self.y == other.y
+        return self.get_x() == other.get_x() and self.get_y() == other.get_y()
 
     def __str__(self) -> str:
-        return "({}, {})".format(self.x + 1, self.y + 1)
+        return "({}, {})".format(self.get_x() + 1, self.get_y() + 1)
 
     def offset(self, direction: Tuple[int, int], reverse: bool = False) -> None:
         if reverse:
-            self.x -= direction[0]
-            self.y -= direction[1]
+            self.set_x(self.get_x() - direction[0])
+            self.set_y(self.get_y() - direction[1])
         else:
-            self.x += direction[0]
-            self.y += direction[1]
+            self.set_x(self.get_x() + direction[0])
+            self.set_y(self.get_y() + direction[1])
 
 
 class Position(Vector):
@@ -36,10 +48,10 @@ class Position(Vector):
         y : y axis value (valid from 0 to 7)
     """
     def is_on_board(self) -> bool:
-        return 0 <= self.x <= 7 and 0 <= self.y <= 7
+        return 0 <= self.get_x() <= 7 and 0 <= self.get_y() <= 7
 
     def copy(self) -> Position:
-        return Position(self.x, self.y)
+        return Position(self.get_x(), self.get_y())
 
 
 class Board:
@@ -76,7 +88,7 @@ class Board:
         Args:
             location : the ``Position`` object to be checked
         """
-        return location.is_on_board() and self._board_array[location.x][location.y] == Settings.empty_tile
+        return location.is_on_board() and self._board_array[location.get_x()][location.get_y()] == Settings.empty_tile
 
     def duplicate_board(self) -> Board:
         """
