@@ -45,9 +45,12 @@ class Board:
     _board_array = None
 
     def __init__(self):
-        board_content = []
-        for i in range(8):
-            board_content.append([' '] * 8)
+        board_content = ' '
+        for dim in Settings.dimensions:
+            next_dimension = []
+            for i in range(dim):
+                next_dimension.append(copy.deepcopy(board_content))
+            board_content = next_dimension
         self._board_array = board_content
 
     def reset_board(self):
