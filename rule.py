@@ -1,18 +1,17 @@
 import itertools
+from typing import Any
 
-from data_structs import Position, Vector
+from data_structs import Position, Vector, Board
 from settings import Settings
 
 
 class Rule:
     @staticmethod
-    def get_tiles_to_flip_for_move(board, position, tile):
+    def get_tiles_to_flip_for_move(board: Board, start_loc: Position, tile: Any):
         if tile == Settings.tile_1:
             other_tile = Settings.tile_2
         else:
             other_tile = Settings.tile_1
-
-        start_loc = position
 
         tiles_to_flip = []
 
@@ -26,14 +25,14 @@ class Rule:
         for direction in directions:
             current_loc = start_loc.copy()
             current_loc.offset(direction)
-            while current_loc.is_on_board() and board._board_array[current_loc.get_coordinate(0)][current_loc.get_coordinate(1)] == other_tile:
+            while current_loc.is_on_board() and board.get_value(current_loc) == other_tile:
                 current_loc.offset(direction)
             if not current_loc.is_on_board():
                 continue
-            if board._board_array[current_loc.get_coordinate(0)][current_loc.get_coordinate(1)] == tile:
+            if board.get_value(current_loc) == tile:
                 current_loc.offset(direction, reverse=True)
                 while current_loc != start_loc:
-                    tiles_to_flip.append([current_loc.get_coordinate(0), current_loc.get_coordinate(1)])
+                    tiles_to_flip.append(current_loc.coordinates)
                     current_loc.offset(direction, reverse=True)
         return tiles_to_flip
 
