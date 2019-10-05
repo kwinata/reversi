@@ -73,6 +73,7 @@ class Rule:
 
     @staticmethod
     def get_score_of_board(board: Board) -> Dict[str, int]:
+        # To be used by alpha beta, may differ then the one used for final counting
         # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
         xscore = 0
         oscore = 0
@@ -85,17 +86,17 @@ class Rule:
         return {Settings.tile_1:xscore, Settings.tile_2:oscore}
 
     @staticmethod
-    def getPointBoard(board):
+    def get_point_board(board):
         # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
         xscore = 0
         oscore = 0
-        for x in range(8):
-            for y in range(8):
-                if board._board_array[x][y] == Settings.tile_1:
-                    xscore += 1
-                if board._board_array[x][y] == Settings.tile_2:
-                    oscore += 1
-        return {Settings.tile_1:xscore, Settings.tile_2:oscore}
+        all_cells = [Position(*coor) for coor in itertools.product(*[range(i) for i in Settings.dimensions])]
+        for cell in all_cells:
+            if board.get_value(cell) == Settings.tile_1:
+                xscore += 1
+            if board.get_value(cell) == Settings.tile_2:
+                oscore += 1
+        return {Settings.tile_1: xscore, Settings.tile_2: oscore}
 
     @staticmethod
     def make_move(board, tile, position):

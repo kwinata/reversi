@@ -122,7 +122,7 @@ class Interface:
     @staticmethod
     def show_points(playerTile, computerTile, mainBoard):
         # Prints out the current score.
-        scores = Rule.getPointBoard(mainBoard)
+        scores = Rule.get_point_board(mainBoard)
         print('You have %s points. The computer has %s points.' % (scores[playerTile], scores[computerTile]))
 
 

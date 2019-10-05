@@ -19,7 +19,7 @@ class InterfaceTest(TestCase):
             Manager.main()
         except ExitException:
             pass
-        scores = Rule.getPointBoard(Manager.board)
+        scores = Rule.get_point_board(Manager.board)
         self.assertEqual(expPlayerScore, scores[tile_1])
         self.assertEqual(expComputerScore, scores[tile_2])
 

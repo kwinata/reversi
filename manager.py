@@ -81,7 +81,7 @@ class Manager:
 
             # Display the final score.
             Interface.draw_board(Manager.board)
-            scores = Rule.getPointBoard(Manager.board)
+            scores = Rule.get_point_board(Manager.board)
             print('%s scored %s points. %s scored %s points.' % (Settings.tile_1, scores[Settings.tile_1], Settings.tile_2, scores[Settings.tile_2]))
             if scores[Manager.player_tile] > scores[Manager.computer_tile]:
                 print('You beat the computer by %s points! Congratulations!' % (
