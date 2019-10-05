@@ -63,11 +63,11 @@ class Rule:
         return new_board_for_printing_only
 
     @staticmethod
-    def get_valid_moves(self, tile):
+    def get_valid_moves(board: Board, tile: Any) -> List[int]:
         valid_moves = []
         cells_to_try = itertools.product(*[range(i) for i in Settings.dimensions])
         for cell in cells_to_try:
-            if Rule.is_valid_move(self, tile, Position(*cell)):
+            if Rule.is_valid_move(board, tile, Position(*cell)):
                 valid_moves.append(cell)
         return valid_moves
 
