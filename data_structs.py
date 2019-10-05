@@ -8,21 +8,20 @@ from settings import Settings
 
 
 class Vector:
-    def __init__(self, x: int, y: int) -> None:
-        self._x = x
-        self._y = y
+    def __init__(self, *coordinates) -> None:
+        self.coordinates = list(coordinates)
 
     def get_x(self):
-        return self._x
+        return self.coordinates[0]
 
     def get_y(self):
-        return self._y
+        return self.coordinates[1]
 
     def set_x(self, x):
-        self._x = x
+        self.coordinates[0] = x
 
     def set_y(self, y):
-        self._y = y
+        self.coordinates[1] = y
 
     def __eq__(self, other: Vector) -> bool:
         return self.get_x() == other.get_x() and self.get_y() == other.get_y()
