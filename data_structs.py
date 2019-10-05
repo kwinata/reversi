@@ -27,7 +27,7 @@ class Vector:
             self.y += direction[1]
 
 
-class Location(Vector):
+class Position(Vector):
     """
     A pointer to a cell on board
 
@@ -38,8 +38,8 @@ class Location(Vector):
     def is_on_board(self) -> bool:
         return 0 <= self.x <= 7 and 0 <= self.y <= 7
 
-    def copy(self) -> Location:
-        return Location(self.x, self.y)
+    def copy(self) -> Position:
+        return Position(self.x, self.y)
 
 
 class Board:
@@ -68,13 +68,13 @@ class Board:
         self._board_array[4][3] = Settings.tile_2
         self._board_array[4][4] = Settings.tile_1
 
-    def is_empty_and_on_board(self, location: Location) -> bool:
+    def is_empty_and_on_board(self, location: Position) -> bool:
         """
         Checks whether the board is empty at the ``location`` and
         still inside the board
 
         Args:
-            location : the ``Location`` object to be checked
+            location : the ``Position`` object to be checked
         """
         return location.is_on_board() and self._board_array[location.x][location.y] == Settings.empty_tile
 

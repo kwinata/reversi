@@ -1,4 +1,4 @@
-from data_structs import Location
+from data_structs import Position
 from exceptions import InvalidLocationException
 from settings import Settings
 
@@ -11,7 +11,7 @@ class Rule:
         else:
             other_tile = Settings.tile_1
 
-        start_loc = Location(xstart, ystart)
+        start_loc = Position(xstart, ystart)
 
         tiles_to_flip = []
         for direction in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
@@ -30,7 +30,7 @@ class Rule:
 
     @staticmethod
     def get_move_result(board, tile, xstart, ystart):
-        if not board.is_empty_and_on_board(Location(xstart, ystart)):
+        if not board.is_empty_and_on_board(Position(xstart, ystart)):
             return False
 
         tiles_to_flip = Rule.get_tiles_to_flip_for_move(board, xstart, ystart, tile)
