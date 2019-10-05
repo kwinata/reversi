@@ -14,12 +14,6 @@ class Vector:
     def get_coordinate(self, axis_no: int) -> int:
         return self.coordinates[axis_no]
 
-    def set_x(self, x):
-        self.coordinates[0] = x
-
-    def set_y(self, y):
-        self.coordinates[1] = y
-
     def __eq__(self, other: Vector) -> bool:
         return self.coordinates == other.coordinates
 
