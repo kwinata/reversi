@@ -7,6 +7,8 @@ from settings import Settings
 
 class Vector:
     def __init__(self, *coordinates) -> None:
+        if len(coordinates) != Settings.dimension:
+            raise ValueError("Wrong coordinates dimension length")
         self.coordinates = list(coordinates)
 
     def get_coordinate(self, axis_no: int) -> int:
@@ -19,8 +21,6 @@ class Vector:
         return "({})".format(", ".join([str(i) for i in self.coordinates]))
 
     def offset(self, other: Vector, reverse: bool = False) -> None:
-        if len(self.coordinates) != len(other.coordinates):
-            raise ValueError("Different length of dimension {} {}".format(self.coordinates, other.coordinates))
         if reverse:
             self.coordinates = [a + b for a, b in zip(self.coordinates, other.coordinates)]
         else:
