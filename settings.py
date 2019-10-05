@@ -4,3 +4,4 @@ class Settings:
     empty_tile = ' '
     tile_hint = '?'
     dimension = 2
+    length = 8

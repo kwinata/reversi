@@ -29,10 +29,13 @@ class Vector:
 
 class Position(Vector):
     def is_on_board(self) -> bool:
-        return 0 <= self.get_coordinate(0) <= 7 and 0 <= self.get_coordinate(1) <= 7
+        for i in range(Settings.dimension):
+            if not(0 <= self.get_coordinate(i) <= Settings.length - 1):
+                return False
+        return True
 
     def copy(self) -> Position:
-        return Position(self.get_coordinate(0), self.get_coordinate(1))
+        return Position(*self.coordinates)
 
 
 class Board:
