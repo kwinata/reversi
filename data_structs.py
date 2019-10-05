@@ -11,11 +11,8 @@ class Vector:
     def __init__(self, *coordinates) -> None:
         self.coordinates = list(coordinates)
 
-    def get_x(self):
-        return self.coordinates[0]
-
-    def get_y(self):
-        return self.coordinates[1]
+    def get_coordinate(self, axis_no: int) -> int:
+        return self.coordinates[axis_no]
 
     def set_x(self, x):
         self.coordinates[0] = x
@@ -47,10 +44,10 @@ class Position(Vector):
         y : y axis value (valid from 0 to 7)
     """
     def is_on_board(self) -> bool:
-        return 0 <= self.get_x() <= 7 and 0 <= self.get_y() <= 7
+        return 0 <= self.get_coordinate(0) <= 7 and 0 <= self.get_coordinate(1) <= 7
 
     def copy(self) -> Position:
-        return Position(self.get_x(), self.get_y())
+        return Position(self.get_coordinate(0), self.get_coordinate(1))
 
 
 class Board:
@@ -87,7 +84,7 @@ class Board:
         Args:
             location : the ``Position`` object to be checked
         """
-        return location.is_on_board() and self._board_array[location.get_x()][location.get_y()] == Settings.empty_tile
+        return location.is_on_board() and self._board_array[location.get_coordinate(0)][location.get_coordinate(1)] == Settings.empty_tile
 
     def duplicate_board(self) -> Board:
         """
