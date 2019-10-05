@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import copy
 
-from typing import Tuple
+from typing import List
 
 from settings import Settings
 
@@ -24,18 +24,18 @@ class Vector:
         self.coordinates[1] = y
 
     def __eq__(self, other: Vector) -> bool:
-        return self.get_x() == other.get_x() and self.get_y() == other.get_y()
+        return self.coordinates == other.coordinates
 
     def __str__(self) -> str:
-        return "({}, {})".format(self.get_x() + 1, self.get_y() + 1)
+        return "({})".format(", ".join([str(i) for i in self.coordinates]))
 
-    def offset(self, direction: Tuple[int, int], reverse: bool = False) -> None:
+    def offset(self, direction: List[int], reverse: bool = False) -> None:
+        if len(self.coordinates) != len(direction):
+            raise ValueError("Different length of vector and direction")
         if reverse:
-            self.set_x(self.get_x() - direction[0])
-            self.set_y(self.get_y() - direction[1])
+            self.coordinates = [a + b for a, b in zip(self.coordinates, direction)]
         else:
-            self.set_x(self.get_x() + direction[0])
-            self.set_y(self.get_y() + direction[1])
+            self.coordinates = [a - b for a, b in zip(self.coordinates, direction)]
 
 
 class Position(Vector):
