@@ -57,8 +57,8 @@ class Rule:
     def get_board_with_hints(board, tile):
         new_board_for_printing_only = board.duplicate_board()
 
-        for x, y in Rule.get_valid_moves(board, tile):
-            new_board_for_printing_only.board[x][y] = Settings.tile_hint
+        for cell in Rule.get_valid_moves(board, tile):
+            new_board_for_printing_only.set_value(Position(*cell), Settings.tile_hint)
 
         return new_board_for_printing_only
 
