@@ -1,5 +1,5 @@
 import itertools
-from typing import Any, List
+from typing import Any, List, Dict
 
 from data_structs import Position, Vector, Board
 from settings import Settings
@@ -72,16 +72,16 @@ class Rule:
         return valid_moves
 
     @staticmethod
-    def getScoreOfBoard(self):
+    def get_score_of_board(board: Board) -> Dict[str: int]:
         # Determine the score by counting the tiles. Returns a dictionary with keys Settings.tile_1 and Settings.tile_2.
         xscore = 0
         oscore = 0
-        for x in range(8):
-            for y in range(8):
-                if self._board_array[x][y] == Settings.tile_1:
-                    xscore += 3
-                if self._board_array[x][y] == Settings.tile_2:
-                    oscore += 3
+        all_cells = [Position(*coor) for coor in itertools.product(*[range(i) for i in Settings.dimensions])]
+        for cell in all_cells:
+            if board.get_value(cell) == Settings.tile_1:
+                xscore += 3
+            if board.get_value(cell) == Settings.tile_2:
+                oscore += 3
         return {Settings.tile_1:xscore, Settings.tile_2:oscore}
 
     @staticmethod

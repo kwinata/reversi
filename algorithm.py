@@ -23,7 +23,7 @@ class Algorithm:
 
         # check for terminal node
         if depth == 0 or possibleMoves == []:
-            return Rule.getScoreOfBoard(board)[computerTile]
+            return Rule.get_score_of_board(board)[computerTile]
 
         # get the player tile
         oppTile = "X"
