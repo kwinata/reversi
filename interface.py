@@ -1,4 +1,5 @@
 from algorithm import Algorithm
+from data_structs import Position
 from exceptions import ExitException
 from rule import Rule
 from settings import Settings
@@ -74,7 +75,7 @@ class Interface:
             if len(move) == 2 and move[0] in DIGITS1TO8 and move[1] in DIGITS1TO8:
                 x = int(move[0]) - 1
                 y = int(move[1]) - 1
-                if Rule.is_valid_move(board, playerTile, x, y) == False:
+                if Rule.is_valid_move(board, playerTile, Position(x, y)) == False:
                     continue
                 else:
                     break

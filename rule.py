@@ -48,8 +48,8 @@ class Rule:
         return tiles_to_flip
 
     @staticmethod
-    def is_valid_move(self, tile, xstart, ystart):
-        if Rule.get_move_result(self, tile, Position(xstart, ystart)):
+    def is_valid_move(self, tile: Any, position: Position)-> bool:
+        if Rule.get_move_result(self, tile, position):
             return True
         return False
 
@@ -69,7 +69,7 @@ class Rule:
 
         for x in range(8):
             for y in range(8):
-                if Rule.is_valid_move(self, tile, x, y) != False:
+                if Rule.is_valid_move(self, tile, Position(x, y)) != False:
                     validMoves.append([x, y])
         return validMoves
 
