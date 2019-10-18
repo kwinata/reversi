@@ -110,8 +110,8 @@ class Interface:
         for x, y in possibleMoves:
 
             print("considering ", x+1, y+1) # ux
-            score = Algorithm.alphabeta(board, 5, -1e9, 1e9, computerTile, computerTile) # get the state of the best minimax board
-            score += Algorithm.scoretable[x][y] # add with the cost of the move
+            score = Algorithm.alpha_beta(board, 5, -1e9, 1e9, computerTile, computerTile) # get the state of the best minimax board
+            score += Algorithm.score_table[x][y] # add with the cost of the move
 
             if score > bestScore:
                 bestMove = [x, y]
