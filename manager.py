@@ -4,6 +4,7 @@ from rule import Rule
 from settings import Settings
 
 
+# remove class, just use Manager as module
 class Manager:
     board = None
     turn = None

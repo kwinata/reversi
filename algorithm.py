@@ -5,6 +5,7 @@ from rule import Rule
 from settings import Settings
 
 
+# TODO: remove class, just use algorithm.py as module
 class Algorithm:
     score_table = [
             [99, -8, 8, 6, 6, 8, -8, 99],

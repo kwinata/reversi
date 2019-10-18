@@ -14,6 +14,7 @@ class MyInput:
         return MyInput.args.pop(0)
 
 
+# remove class, just use interface.py as module
 class Interface:
     mainBoard = None
 
