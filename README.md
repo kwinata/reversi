@@ -18,11 +18,3 @@ Best run with Python 3.6.2. Simply run "python reversi.py" for windows or "pytho
 
 ## Improvement
 The evaluation here doesn't care with different situation of the game. We can improve the computer play by putting different cases and stages of game. For example, when no body have put their piece outside the inner 4 x 4 box yet, or after the first piece put on the edge of the board, etc. We can implement different stages of goal for each stages of game. Those things are not done yet.
-
-## Bug
-This code has not gone for quite much testing. Should you encounter any bug, error, or suggestions, please kindly email to kevinwinatamichael@gmail.com with logs (if any).
-
-## Diagram
-
-### Component Diagram
-![reversi component diagram](https://github.com/kevinwinatamichael/reversi/blob/master/component_diagram.png "Component Diagram")
